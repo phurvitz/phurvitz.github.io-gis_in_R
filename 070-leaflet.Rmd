@@ -1,0 +1,110 @@
+# `leaflet` and `mapview` maps {#leaflet}
+```{r}
+library(leaflet)
+library(mapview)
+library(htmltools)
+
+# path to this file name
+if (!interactive()) {
+    fnamepath <- current_input(dir = TRUE)
+} else {
+    fnamepath <- ""
+}
+```
+
+This exercise will introduce construction of a Leaflet map using the `leaflet` package. Also simple interface uses the `mapview::mapview()` function, which automatically adds the OpenStreetMap background, uses pre-loaded colors, and with the `legend = TRUE` option also adds a map legend.
+
+```{r}
+mapview(nhood_pov, zcol = "pct_pov", legend = TRUE)
+```
+
+We will now build up a map using `leaflet()` for a bit more control.
+
+```{r}
+# CRS
+nhood_pov_4326 <- nhood_pov %>% st_transform(4326)
+
+# make a label with the count of persons, persons below poverty, and % poverty
+nhood_pov_4326$mylab <- sprintf("n_pov=%s<br>n=%s<br>%s<br>", 
+                                round(nhood_pov_4326$n_pov, 0), 
+                                round(nhood_pov_4326$n, 0), 
+                                paste("pov=", nhood_pov_4326$pct_pov, "%", sep=""))
+
+l <- leaflet(data = nhood_pov_4326) %>%
+    addPolygons(popup = ~mylab, weight = 2) %>%
+    addTiles()
+l
+```
+
+Let's change the labels to include neighborhood name and % poverty, add choropleth fill and a legend:
+
+```{r}
+# CRS
+nhood_pov_4326 <- nhood_pov %>% st_transform(4326)
+
+mypalette <- colorQuantile(palette = "viridis", domain = nhood_pov_4326$pct_pov, n = 4)
+
+# make a label with the count of persons, persons below poverty, and % poverty
+nhood_pov_4326$mylab <- sprintf("%s<br>%s<br>", 
+                                nhood_pov_4326$gen_alias, 
+                                paste("pov=", nhood_pov_4326$pct_pov, "%", sep=""))
+
+l <- leaflet(data = nhood_pov_4326) %>%
+    addPolygons(popup = ~mylab, 
+                weight = 2, 
+                fillColor = ~mypalette(pct_pov),
+                opacity = 0.7) %>%
+    addTiles() %>%
+    addLegend(pal=mypalette, values=~pct_pov, opacity=0.7, title = "% below poverty", position = "bottomleft" )
+
+l
+```
+
+Finally, add the hospitals with a label that will display when hovering over the point marker.
+
+```{r}
+# CRS
+nhood_pov_4326 <- nhood_pov %>% st_transform(4326)
+
+# hospitals
+hospitals <- st_read(file.path(mydatadir, "medical_facilities", "medical_facilities.shp"), quiet = TRUE) %>% st_transform(4326)
+
+mypalette <- colorQuantile(palette = "viridis", domain = nhood_pov_4326$pct_pov, n = 4)
+
+# make a label with the count of persons, persons below poverty, and % poverty
+nhood_pov_4326$mylab <- sprintf("%s<br>%s<br>", 
+                                nhood_pov_4326$gen_alias, 
+                                paste("pov=", nhood_pov_4326$pct_pov, "%", sep=""))
+
+l <- leaflet(data = nhood_pov_4326) %>%
+    addPolygons(popup = ~mylab, 
+                weight = 2, 
+                fillColor = ~mypalette(pct_pov),
+                opacity = 0.7) %>%
+    addTiles() %>%
+    addLegend(pal=mypalette, values=~pct_pov, opacity=0.7, title = "% below poverty", position = "bottomleft" )
+
+l <- addCircleMarkers(map = l, 
+                     data = hospitals,
+                     radius = 5, 
+                     weight = 1,
+                     opacity = 0.9,
+                     fillOpacity = 0.5,
+                     label = ~ABB_NAME)
+
+l
+```
+
+# Source code
+File is at `r fnamepath`.
+
+## R code used in this document
+```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
+```
+
+## Complete Rmd code
+```{r comment=''}
+cat(readLines(fnamepath), sep = '\n')
+```
+
+

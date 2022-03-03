@@ -1,0 +1,139 @@
+# Importing and exporting spatial data sets {#import-export}
+
+```{r, echo=FALSE}
+library(sf)
+```
+
+## Importing spatial data sets
+The function `st_read()` is essentially wrapper to functions in the Geospatial Data Abstraction Library ([GDAL](http://www.gdal.org/)), which includes translation functions for a large number of GIS data formats.
+
+For this course we will focus on the use of [Esri shape files](https://en.wikipedia.org/wiki/Shapefile) and the Open Geospatial Consortium [GeoPackage (GPKG)](https://www.geopackage.org) format, although `st_read()` can read many different types of spatial data formats, including PostGIS database connnections..
+
+We will pay particular attention to the GPKG format. Whereas a shape file can represent only a single spatial layer with a single geometric data type, a GPKG container may contain multiple objects. Also, because shape files are dependent on the dBASE tabular file format for storing attributes, there are various limitations such as 10-character uppercase column names. The underlying format for GPKG files is an SQLite database that can contain multiple different object types, including
+
+* vector features
+* tile matrix sets of imagery and raster maps at various scales
+* attributes (non-spatial data)
+* extensions 
+
+For those familiar with Esri software, the GPKG is similar in concept to the Esri geodatabase format. However, the GPKG is open source rather than proprietary, and can be accessed directly through either GIS software that can read the format, or within an SQLite database connection for SQL operations.
+
+Let's read the ZIP code data, which are in an Esri file geodatabase. In order to read some formats it is necessary to have drivers installed--therefore not all computers can necessarily open all file types. __[Was anyone not able to open the GDB?]__
+
+```{r readzip}
+# path to the data
+mydatadir <- file.path("C:", "users", Sys.getenv("USERNAME"), "Desktop", "r_gis", "data")
+zippolyfname <- file.path(mydatadir, "zip_poly.gdb")
+# avoid reading over and over
+if(!exists("zipcodes")){
+    zipcodes <- st_read(dsn = zippolyfname, layer = "zip_poly", as_tibble = TRUE, geometry_column = "Shape")
+}
+```
+
+```{r zip1}
+# change the data frame's column names to lowercase
+colnames(zipcodes) <- tolower(colnames(zipcodes))
+# after renaming columns it is necessary to re-establish which column contains the geometry
+st_geometry(zipcodes) <- "shape"
+```
+
+By default, `st_read()` prints some metadata during the read opearation (which can be silenced using `quiet = TRUE`). This shows that the data set contains `r nrow(zipcodes)` records and `r ncol(zipcodes)` columns (including the geometry columns). It is has multipolygon geometry, meaning that a single record can contain multiple rings (e.g., if a single ZIP code area straddled a stream), and its spatial reference is WGS84 (coordinates as degrees of latitude and longitude).
+
+To make a manageable data set, let's extract only those ZIP codes areas for Washington State.
+
+```{r zip2}
+zip_wa <- zipcodes %>% filter(state == "WA")
+```
+
+The first several records:
+
+```{r zipwa1}
+head(zip_wa)
+```
+
+We can now plot the ZIP code polygons. The default `plot()` function will create a separate graph for each variable; to only show the geometries, specify plotting only the column represeting geometry. 
+
+```{r zipwa2}
+plot(x = zip_wa$shape, axes = TRUE)
+```
+
+Let's now read the hospital shape file data.
+
+```{r hosp1}
+hospitals <- st_read(file.path(mydatadir, "medical_facilities/medical_facilities.shp"))
+```
+
+This shows that there were `r nrow(hospitals)` rows and `r ncol(hospitals)` columns. Shape files do not use EPSG codes for spatial reference, but the `proj4string` shows the complete unequivocal projection/coordinate system reference. 
+
+Finally, let's read the water areas.
+
+```{r h2o}
+h2o <- st_read(file.path(mydatadir, "wtrbdy/wtrbdy.shp"))
+```
+
+```{r mixedplot}
+# type = "n" not to plot, but sets xlim and ylim
+plot(hospitals$geometry, type = "n", axes = TRUE)
+# water
+plot(h2o$geometry, col = "cyan", border = 0, add = TRUE)
+# hospital points
+plot(hospitals$geometry, add = TRUE)
+# ZIP code areas
+plot(zip_wa$shape, add = TRUE, col = 0, border = 1)
+box()
+```
+
+Well the hospitals and water bodies seemed to plot fine. Why don't we see any ZIP code outlines as we did in QGIS? We will look at this more in Chapter \@ref(crs).
+
+## Exporting spatial data {#export}
+Similar to `st_read()`, `st_write()` can be used to export spatial data into a variety of formats. In this exercise we will export to shape files and GPKG databases.
+
+First, we will export the Washington State ZIP code areas to a shape file. Similar to `st_read()`, `st_write()` prints an informative message.
+
+```{r drop0, echo=FALSE, message=FALSE}
+if(file.exists(file.path(mydatadir, "zip_wa.shp"))){
+    O <- file.remove(file.path(mydatadir, "zip_wa.shp"))
+}
+```
+
+```{r zipwrite}
+st_write(obj = zip_wa, dsn = file.path(mydatadir, "zip_wa.shp"))
+```
+
+Switch to QGIS and load the exported Washington State ZIP codes as a layer. Note that the column names were truncated to 10 characters. Also note that although the ZIP code data are stored in WGS84 latitude and longitude, they seem to overlay nicely with the hospitals, which are stores in WA State Plane north coordinates. __BONUS__: is this "projection on the fly" a good or a bad thing? What do you think I think about it?
+
+![](images/2020-02-11_00_53_52-_esda_20200212a - QGIS.png)
+
+Next, we will write the first data sets we created (point, linestring, and polygon) and the WA ZIP code areas into a GPKG.
+
+```{r drop1, echo=FALSE, message=FALSE}
+if(file.exists(file.path(mydatadir, "r_gis.gpkg"))){
+    O <- file.remove(file.path(mydatadir, "r_gis.gpkg"))
+}
+```
+
+```{r multiwrite}
+st_write(obj = pts, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "pts")
+st_write(obj = lnstr, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "lnstr")
+st_write(obj = plygn, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "plygn")
+st_write(obj = zip_wa, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "zip_wa")
+```
+
+Finally, add these data sets to your QGIS Map.
+
+![](images/2020-02-11_09_38_16-esda_20200212a - QGIS.png)
+
+![](images/2020-02-11_12_43_31-_esda_20200212a - QGIS.png)
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,878 @@
+--- 
+title: "Reproducible GIS analysis with R"
+author: "[Phil Hurvitz](mailto:phurvitz@uw.edu)"
+date: '`r format(Sys.time(), "%Y-%m-%d %H:%M")`'
+site: bookdown::bookdown_site
+output: bookdown::html_document2
+documentclass: book
+bibliography: [book.bib, packages.bib]
+biblio-style: apalike
+link-citations: yes
+description: "Manual for CSDE Workshop 'Reproducible GIS analysis with R'"
+---
+
+# Introduction
+<!--The materials available here were created to guide students through the [CSDE](https://csde.washington.edu/) [workshop]() course on the use of geographic information systems (GIS) functionality in [R](https://cran.r-project.org/), primarily with the use of the [`sf` (Simple Features for R)](https://r-spatial.github.io/sf/articles/sf1.html) and [`raster`](https://cran.r-project.org/web/packages/raster/index.html) packages. The focus of the course is reproducible GIS analytic work flows.-->
+
+The materials available here were created to guide students through the [CSDE](https://csde.washington.edu/) [workshop](https://csde.washington.edu/workshop/reproducible-gis-analysis-with-r/) course on the use of geographic information systems (GIS) functionality in [R](https://cran.r-project.org/), primarily with the use of the [`sf` (Simple Features for R)](https://r-spatial.github.io/sf/articles/sf1.html) package. The focus of the course is reproducible GIS analytic work flows.
+
+__Rationale__
+
+GIS provides a powerful environment for the analysis of spatially-referenced data. The most widely used GIS applications in research are "desktop" software products with graphical user interfaces designed for interactive use. These applications (e.g., ArcMap, QGIS) are wonderful tools for exploratory data analysis and map production. However, in research they introduce the problem that much of the results of even fairly simple analytic work flows are not reproducible because the software is generally not designed to record all of the tasks the user performed. This is particularly salient during development of analytic methods, during which a substantial amount of trial-and-error occurs. Another problem with ArcGIS in particular is that geoprocessing generally requires the user to specify the output file system location and file name for any analytic results. This introduces several  issues: (1) when an analyst is in the "zone," taking the time do decide where to put a data set and what to call it can break the flow of creativity; (2) accepting the default location and names of geoprocessing operations can result in a jumble of data with meaningless file names; (3) given an existing data set, how would the analyst know what work flow created this as a result? 
+
+Approaching GIS analysis within an R framework addresses many of these problems:
+
+1. Geoprocessing operations that are performed with programmatic code are reproducible. While ArcGIS and QGIS include Python for programmatic approaches, many researchers are already working with R, so only some new commands need to be learned, rather than an entire new language.
+1. R is a language that is relatively easy to read and write, lowering the bar for entry.
+1. R results are generally stored as `data frames` which can then be used by the many analytic functions in base R or in added packages.
+1. Geoprocessing operations produce results that are stored in memory. This will be a problem for very large data sets and/or limited RAM. On the other hand, it does not force the analyst to decide the file system location and name of a data set at run time; code can be altered to store file system outputs after work flows are determined to have created correct results.
+1. Files created using programmatic code can be traced back to the code that generated them (i.e., `find / -name "*.R" | xargs grep "myawesomedataset.gpkg"`).
+1. Incorporating GIS analyses in R Markdown allows the analyst to create reports that include both the analytic code used to create results as well as to show results and even maps.
+
+__What this course is__
+
+This course will introduce students to the use of basic GIS functionalities within the R framework. By the end of the course, students will be able to import and export GIS data sets, perform coordinate transformations, perform some rudimentary GIS analyses, and produce simple interactive maps.
+
+__What this course is <i>not</i>__
+
+This course is not intended to teach fundamentals of GIS. We assume that students have at least a beginning to intermediate level of skill in the use of a desktop GIS software application such as ArcGIS Desktop or QGIS. This is also not an R course--it is expected that students will have a fundamental grasp of the use of R.
+
+__Overview__
+
+Each of the topics shown below will be covered during the course.
+
+1. Getting started
+1. Representation of spatial features
+1. Data import/export
+1. Projections and coordinate systems
+1. Overlay analysis
+    1. Point-in-polygon
+    1. Polygon-on-polygon
+<!--1. Raster functionality-->
+1. Simple interactive maps with Leaflet
+
+<!--chapter:end:index.Rmd-->
+
+# Getting started {#getting_started}
+
+Before we start, make sure that you have opened RStudio and QGIS on your computer.
+
+## Install necessary packages
+
+The most important packages We will be using for the GIS work are [`sf`](https://r-spatial.github.io/sf/articles/sf1.html), [`raster`](https://cran.r-project.org/web/packages/raster/index.html),  [`leaflet`](https://cran.r-project.org/web/packages/leaflet/), and [`rgdal`](). To install these and others that we will be using, enter at the R console prompt (or copy-and-paste):
+
+```
+install.packages(
+    c("sf", 
+    "raster", 
+    "leaflet", 
+    "rgdal", 
+    "kableExtra", 
+    "leaflet", 
+    "dplyr",
+    "pander",
+    "knitr",
+    "kableExtra",
+    "tidycensus",
+    "ggplot2",
+    "forcats")
+)
+```
+
+This should only need to be done once on any user R installation.
+
+## Create an RStudio project
+
+Create a new RStudio project in a new folder on your desktop named `r_gis` (`File` > `New Project`).
+
+![](images/2020-02-10 16_59_09-RStudio.png)
+
+![](images/2020-02-10 17_00_58-RStudio.png)
+
+![](images/2020-02-10 17_03_55-Choose Directory.png)
+
+![](images/2020-02-10 17_04_04-RStudio.png)
+
+__Create a few folders__
+
+Use the `Files` pane and create three new folders names `scripts`, `data`, and `rmd`. These will be used to store various files in an organized fashion.
+
+__Create an R Markdown file___
+
+Create a new R script (`File > New File > R Markdown...)` 
+
+![](images/2020-02-12_09_31_14-C__Users_phurvitz_Desktop_r_gis - RStudio.png)
+
+Delete most of the content
+
+![](images/2020-02-12_09_32_29-C__Users_phurvitz_Desktop_r_gis - RStudio.png)
+
+And save it as `r_gis.Rmd` in your `rmd` folder.
+
+![](images/2020-02-12_09_33_46-Save File - Untitled1.png)
+
+This is the file that will store the code for this workshop.
+
+In the `setup` chunk, add these lines for the packages we will be using:
+
+```
+library(kableExtra)
+library(knitr)
+library(leaflet)
+library(pander)
+library(sf)
+library(tidycensus)
+library(ggplot2)
+library(dplyr)
+library(forcats)
+```
+
+and then save the Rmd file. We will continue adding to the file as we progress.
+
+
+## Download files
+
+Download some files into the `data` folder you just created:
+
+* [MetroKC transpiration features](http://staff.washington.edu/phurvitz/r_gis/Metro_Transportation_Network_TNET_in_King_County__trans_network_line.zip)
+* [MetroKC transit stops](http://staff.washington.edu/phurvitz/r_gis/busstop_SHP.zip)
+* [KC GIS medical facilities](http://staff.washington.edu/phurvitz/r_gis/medical_facilities_SHP.zip)
+* [KC GIS waterbodies](http://staff.washington.edu/phurvitz/r_gis/wtrbdy_SHP.zip)
+* [Esri ZIP code polygons](http://staff.washington.edu/phurvitz/r_gis/zip_poly.gdb.zip)
+* [Seattle community reporting areas](http://staff.washington.edu/phurvitz/r_gis/Community_Reporting_Areas.zip)
+
+After you have downloaded the files, unzip them. The most efficient way to do this is to select all the files, R-click one of them, and then select `7-Zip` > `Extract Here`. 
+
+![](images/2020-02-10 17_38_04-.png)
+
+You should now have a collection of files in your `data` folder, including the ones you downloaded.
+
+![](images/2020-02-10 17_39_18-C__Users_phurvitz_Desktop_r_gis_data.png)
+
+## Preview data
+In QGIS, create a new project (`Project` > `New` or use the keyboard shortcut `Ctrl-N`).
+
+Make sure the `Browser` panel is available (`View` > `Panels `Browser`). This will make it easier to add layers to the project. Also make sure the `Layer Styling` panel is checked, which will enable you to quickly modify layer display properties.
+
+![](images/2020-02-10_18_02_03-Untitled Project - QGIS.png)
+
+Next, make a shortcut to the `data` folder by R-clicking `Favorites`, selecting `Add a Directory` and navigating the the `data` folder.
+
+![](images/2020-02-10_18_02_36-Untitled Project - QGIS.png)
+
+![](images/2020-02-10_18_03_19-Add Directory to Favorites.png)
+
+Expand all of the folders, and select the data sources you just downloaded and drag them onto the map display.
+
+![](images/2020-02-10_18_08_58-Untitled Project - QGIS.png)
+
+If you get dialogs for `Select Datum Transformations`, click __OK__.
+
+![](images/2020-02-10_18_12_53-Select Datum Transformations.png)
+
+The data set of ZIP code areas covers the entire US, so it may take some time to display them; to speed up the display process, R-click any of the King County layers and select `Zoom to Layer`.
+
+Alter any of the layer display properties if the colors hurt your eyes.
+
+![](images/2020-02-10_18_20_13-_Untitled Project - QGIS.png) ![](images/2020-02-10_18_22_13-_Untitled Project - QGIS.png)
+
+## Save your project
+
+Save the QGIS project in a new folder named `qgis`; ___Bonus___: What is the significance of the file name I used?
+
+![](images/2020-02-10_18_25_14-Choose a QGIS project file.png)
+
+<!--
+
+You can label chapter and section titles using `{#label}` after them, e.g., we can reference Chapter \@ref(intro). If you do not manually label them, there will be automatic labels anyway, e.g., Chapter \@ref(methods).
+
+Figures and tables with captions will be placed in `figure` and `table` environments, respectively.
+
+```{r nice-fig, fig.cap='Here is a nice figure!', out.width='80%', fig.asp=.75, fig.align='center'}
+par(mar = c(4, 4, .1, .1))
+plot(pressure, type = 'b', pch = 19)
+```
+
+Reference a figure by its code chunk label with the `fig:` prefix, e.g., see Figure \@ref(fig:nice-fig). Similarly, you can reference tables generated from `knitr::kable()`, e.g., see Table \@ref(tab:nice-tab).
+
+```{r nice-tab, tidy=FALSE}
+knitr::kable(
+  head(iris, 20), caption = 'Here is a nice table!',
+  booktabs = TRUE
+)
+```
+
+You can write citations, too. For example, we are using the **bookdown** package [@R-bookdown] in this sample book, which was built on top of R Markdown and **knitr** [@xie2015].
+-->
+
+<!--chapter:end:010-getting_started.Rmd-->
+
+# Representation of spatial features {#representation}
+
+Vector (point, line, and polygon) features as used in the `sf` package are compliant with the [Open Geospatial Consortium](https://www.opengeospatial.org/standards/sfa) standard.
+
+To start, let's load the `sf` and `dplyr` packages .
+
+```{r, warning=FALSE, message=FALSE}
+library(sf)
+library(dplyr)
+```
+
+## Points {#points}
+Points are stored as X and Y coordinates. In the folliwing code chunk we make a `sf` data frame from one point at the longitude and latitude representing the Space Needle. The option `crs = 4326` specifies to register the X and Y coordinates to WGS84 ([EPSG code 4326](https://spatialreference.org/ref/epsg/wgs-84/)). More attention will be paid to coordinate systems in Chapter  \@ref(crs).
+
+
+```{r sn1}
+snxy <- data.frame(name = "Space Needle", x = -122.3493, y = 47.6205)
+space_needle <- st_as_sf(snxy, coords = c("x", "y"), crs = 4326)
+```
+
+We can see a complete description of the data frame, which includes the geometry type, dimension, bounding box coordinates, spatial reference ID ("SRID") and proj4 projection definition, and finally the contents of the data frame, incuding the column `geometry` that shows the longitude and latitude.
+
+Importantly, the `sf` data frame is an extension of the data frame model. The data frame can consist of the same type of data you have been using in R, but with the addition of columns that contain OGC representations of vector features.
+
+```{r sn2}
+print(space_needle)
+```
+
+The coordinates of the point can be extracted using the `st_coordinates()` function:
+
+```{r sn3}
+st_coordinates(space_needle)
+```
+
+Let's add the coordinates of Savery Hall:
+
+```{r sav1}
+shxy <- data.frame(name = "Savery Hall", x = -122.3083, y = 47.6572)
+savery_hall <- st_as_sf(shxy, coords = c("x", "y"), crs = 4326)
+
+# rbind() to put two points in one data frame
+pts <- rbind(space_needle, savery_hall)
+```
+
+View the data frame:
+
+```{r pts1}
+print(pts)
+```
+
+View the points in coordinate space:
+
+```{r pts2}
+plot(pts$geometry, axes = TRUE)
+```
+
+## Linestrings
+Linestrings are linear features created a single set of ordered pairs of points. We can use the set of points we created to generate a simple linestring `sf` data frame with two vertices:
+
+```{r ls}
+# create a linestring sf data frame 
+lnstr <- st_sfc(st_linestring(st_coordinates(pts)), crs = 4326)
+```
+
+As with the point data frame we can add columns:
+
+```{r ls2}
+lnstr <- as_tibble(lnstr) %>% mutate(od = "Space Needle, Savery Hall")
+```
+
+And plot the points and linestring with base R graphics:
+
+```{r pts-ls}
+plot(pts$geometry, axes = TRUE)
+text(x = st_coordinates(pts), labels = pts$name)
+plot(lnstr$geometry, col = 2, add = TRUE)
+```
+
+Of course, linestrings can have any number of vertices > 1. ___Bonus___: How would you construct a set of linestrings representing distinct days of GPS data collected from one study subject?
+
+## Polygons
+Polygons are ordered collections of XY coordinates with at least 4 vertices. In order for the polygon to "close", the first and last vertices need to be at the same XY location.
+
+Let's add another point to our collection:
+
+```{r zoo}
+zooxy <- data.frame(name = "Woodland Park Zoo", x = -122.3543, y = 47.6685)
+wp_zoo <- st_as_sf(zooxy, coords = c("x", "y"), crs = 4326)
+
+# rbind() to put two points in one data frame
+pts <- rbind(pts, wp_zoo)
+```
+
+And construct a polygon using the coordinates of the set of three points and closed with a ccopy of the first point
+
+```{r plygn}
+(plygn <- st_sfc(st_polygon(list(st_coordinates(rbind(pts, space_needle)))), crs = 4326))
+```
+
+Plotted with the other features:
+
+```{r plotgeoms}
+plot(plygn, col = "cyan", axes = TRUE)
+plot(lnstr$geometry, col = 2, add = TRUE, lwd = 3)
+plot(pts$geometry, add = TRUE, cex = 2)
+text(x = st_coordinates(pts), labels = pts$name)
+```
+
+## Conclusion
+It is more likely that you will be obtaining GIS data sources, rather than constructing your own using the types of functions shown above. However, understanding how these features are represented, created, and stored should give you a better understanding of how GIS works at a fundamental level.
+
+
+
+<!--chapter:end:020-representation.Rmd-->
+
+# Importing and exporting spatial data sets {#import-export}
+
+```{r, echo=FALSE}
+library(sf)
+```
+
+## Importing spatial data sets
+The function `st_read()` is essentially wrapper to functions in the Geospatial Data Abstraction Library ([GDAL](http://www.gdal.org/)), which includes translation functions for a large number of GIS data formats.
+
+For this course we will focus on the use of [Esri shape files](https://en.wikipedia.org/wiki/Shapefile) and the Open Geospatial Consortium [GeoPackage (GPKG)](https://www.geopackage.org) format, although `st_read()` can read many different types of spatial data formats, including PostGIS database connnections..
+
+We will pay particular attention to the GPKG format. Whereas a shape file can represent only a single spatial layer with a single geometric data type, a GPKG container may contain multiple objects. Also, because shape files are dependent on the dBASE tabular file format for storing attributes, there are various limitations such as 10-character uppercase column names. The underlying format for GPKG files is an SQLite database that can contain multiple different object types, including
+
+* vector features
+* tile matrix sets of imagery and raster maps at various scales
+* attributes (non-spatial data)
+* extensions 
+
+For those familiar with Esri software, the GPKG is similar in concept to the Esri geodatabase format. However, the GPKG is open source rather than proprietary, and can be accessed directly through either GIS software that can read the format, or within an SQLite database connection for SQL operations.
+
+Let's read the ZIP code data, which are in an Esri file geodatabase. In order to read some formats it is necessary to have drivers installed--therefore not all computers can necessarily open all file types. __[Was anyone not able to open the GDB?]__
+
+```{r readzip}
+# path to the data
+mydatadir <- file.path("C:", "users", Sys.getenv("USERNAME"), "Desktop", "r_gis", "data")
+zippolyfname <- file.path(mydatadir, "zip_poly.gdb")
+# avoid reading over and over
+if(!exists("zipcodes")){
+    zipcodes <- st_read(dsn = zippolyfname, layer = "zip_poly", as_tibble = TRUE, geometry_column = "Shape")
+}
+```
+
+```{r zip1}
+# change the data frame's column names to lowercase
+colnames(zipcodes) <- tolower(colnames(zipcodes))
+# after renaming columns it is necessary to re-establish which column contains the geometry
+st_geometry(zipcodes) <- "shape"
+```
+
+By default, `st_read()` prints some metadata during the read opearation (which can be silenced using `quiet = TRUE`). This shows that the data set contains `r nrow(zipcodes)` records and `r ncol(zipcodes)` columns (including the geometry columns). It is has multipolygon geometry, meaning that a single record can contain multiple rings (e.g., if a single ZIP code area straddled a stream), and its spatial reference is WGS84 (coordinates as degrees of latitude and longitude).
+
+To make a manageable data set, let's extract only those ZIP codes areas for Washington State.
+
+```{r zip2}
+zip_wa <- zipcodes %>% filter(state == "WA")
+```
+
+The first several records:
+
+```{r zipwa1}
+head(zip_wa)
+```
+
+We can now plot the ZIP code polygons. The default `plot()` function will create a separate graph for each variable; to only show the geometries, specify plotting only the column represeting geometry. 
+
+```{r zipwa2}
+plot(x = zip_wa$shape, axes = TRUE)
+```
+
+Let's now read the hospital shape file data.
+
+```{r hosp1}
+hospitals <- st_read(file.path(mydatadir, "medical_facilities/medical_facilities.shp"))
+```
+
+This shows that there were `r nrow(hospitals)` rows and `r ncol(hospitals)` columns. Shape files do not use EPSG codes for spatial reference, but the `proj4string` shows the complete unequivocal projection/coordinate system reference. 
+
+Finally, let's read the water areas.
+
+```{r h2o}
+h2o <- st_read(file.path(mydatadir, "wtrbdy/wtrbdy.shp"))
+```
+
+```{r mixedplot}
+# type = "n" not to plot, but sets xlim and ylim
+plot(hospitals$geometry, type = "n", axes = TRUE)
+# water
+plot(h2o$geometry, col = "cyan", border = 0, add = TRUE)
+# hospital points
+plot(hospitals$geometry, add = TRUE)
+# ZIP code areas
+plot(zip_wa$shape, add = TRUE, col = 0, border = 1)
+box()
+```
+
+Well the hospitals and water bodies seemed to plot fine. Why don't we see any ZIP code outlines as we did in QGIS? We will look at this more in Chapter \@ref(crs).
+
+## Exporting spatial data {#export}
+Similar to `st_read()`, `st_write()` can be used to export spatial data into a variety of formats. In this exercise we will export to shape files and GPKG databases.
+
+First, we will export the Washington State ZIP code areas to a shape file. Similar to `st_read()`, `st_write()` prints an informative message.
+
+```{r drop0, echo=FALSE, message=FALSE}
+if(file.exists(file.path(mydatadir, "zip_wa.shp"))){
+    O <- file.remove(file.path(mydatadir, "zip_wa.shp"))
+}
+```
+
+```{r zipwrite}
+st_write(obj = zip_wa, dsn = file.path(mydatadir, "zip_wa.shp"))
+```
+
+Switch to QGIS and load the exported Washington State ZIP codes as a layer. Note that the column names were truncated to 10 characters. Also note that although the ZIP code data are stored in WGS84 latitude and longitude, they seem to overlay nicely with the hospitals, which are stores in WA State Plane north coordinates. __BONUS__: is this "projection on the fly" a good or a bad thing? What do you think I think about it?
+
+![](images/2020-02-11_00_53_52-_esda_20200212a - QGIS.png)
+
+Next, we will write the first data sets we created (point, linestring, and polygon) and the WA ZIP code areas into a GPKG.
+
+```{r drop1, echo=FALSE, message=FALSE}
+if(file.exists(file.path(mydatadir, "r_gis.gpkg"))){
+    O <- file.remove(file.path(mydatadir, "r_gis.gpkg"))
+}
+```
+
+```{r multiwrite}
+st_write(obj = pts, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "pts")
+st_write(obj = lnstr, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "lnstr")
+st_write(obj = plygn, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "plygn")
+st_write(obj = zip_wa, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "zip_wa")
+```
+
+Finally, add these data sets to your QGIS Map.
+
+![](images/2020-02-11_09_38_16-esda_20200212a - QGIS.png)
+
+![](images/2020-02-11_12_43_31-_esda_20200212a - QGIS.png)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--chapter:end:030-import_export.Rmd-->
+
+# Handling projections and coordinate systems {#crs}
+
+```{r echo=FALSE}
+library(knitr)
+library(pander)
+library(kableExtra)
+library(rgdal)
+```
+
+## Projections and coordinate systems
+Even well-seasoned GIS analysts can stumble over projections and coordinate systems.
+
+A projection is simply a mathematical function for transforming the X and Y coordinates of a point in one spatial reference framework to X and Y coordinates in a different spatial reference framework.
+
+Initially, any point on the earth can have its location specified by the degrees north or south of the equator (latitude) and west or east of the Greenwich meridian (longitude). These spherical coordinates can be transformed to Cartesian coordinates using tried and true projection transformation equations. For the geodesically inclined, see Snyder's comprehensive work, [Map Projections--A working Manual](pubs.usgs.gov/pp/1395/report.pdf).
+ 
+For example, the Space Needle shows up in Google Maps at (-122.349276&deg;, 47.620517&deg;)
+
+![](images/2020-02-11_13_12_22-Space Needle - Google Maps.png)
+
+The same location on the USGS topographic sheet indicates tick marks for both UTM and State Plane coordinates. For the same location on the earth's surface, the WA State Plane North HARN coordinates are (1266575.4, 230021.7) ft, and the UTM Zone 10 N coordinates are (548894.1, 5274326.9) m.
+
+![](images/2020-02-11_13_29_51-_esda_20200212a - QGIS.png)
+
+__BONUS__ Why would you use a Cartesian projected coordinate reference system versus a geographic (latitude/longitude) reference system?
+
+## On-the-fly projection in desktop GIS
+How is it that we could not see the ZIP code outlines in our R map (Chapter \@(export)) when they appeared just fine in QGIS? Desktop GIS applications including ArcMap and QGIS employ "on-the-fly" projection. The software will read any existing coordinate reference system (CRS) tags associated with a data set (e.g., a `.prj` file as part of a shape file or a "world file" accompanying a TIFF or JPEG file). The software will transform the coordinates of the data to match the CRS of other data in the same map viewer. This process does not alter data in any way, but rather just changes display properties.
+
+On-the-fly projection for mapping is highly convenient, particularly if you have many different data sets that originated from different agencies, each of which uses a different CRS standard. For example, some products from the USGS are referenced to latitude/longitude and some are referenced to UTM; the City of Seattle and King County uses WA State Plane North and the Washington State Departments of Transportation and Natural Resources uses WA State Plane South. 
+
+However, there is a dark side. Although the layers appear to register correctly, any analyses performed between layers will not produce correct results. This is because the geoprocessing algorithms use the absolute numerical values of the coordinates as if they were drawn on a sheet of graph paper, without respect to whether those coordinates represent any particular CRS. For this reason, any for project involving GIS analysis using multiple data sources, the first step should be to decide on a single CRS and transform all data as necessary to be stored in that CRS.
+
+Which CRS to use will depend on which distortion you want to minimize: area, shape, distance, or direction. See the [USGS Map Projections poster](images/00_map_projections_usgs.pdf) for details, which are beyond the scope of this workshop.
+
+
+## Defining a data set's coordinate reference system
+If you have a `sf` spatial data frame consisting of vector data or a raster data set (covered in Chapter \@(raster)) that is not tagged with its CRS, there are simple commands to do so: `st_crs()` for `sf` data frames and `crs()` for rasters. The function can be used to show the current CRS or to (re)define the CRS. The CRS can be specified in one of two ways, using [EPSG codes](http://www.epsg.org/), which uses numerical codes for different CRSs, or a `prj4` string, which verbosely lists all the parameters for a given CRS. Using EPSG codes is more convenient than using prj4 strings.
+
+If you obtain a spatial data set, one of the things you need to be absolutely certain of is its CRS. Most data sets are provided with either files (e.g., `.prj` files for shape files) or internal metadata (e.g., embedded in a GeoTIFF), or at least a description of their CRS. If you do not know the CRS of your data, you can [make educated guesses](gis.washington.edu/phurvitz/gis_data/projection_exercise/).
+
+In any case if you have a data set that has no CRS defined, although it may not be absolutely necessary, you should define its CRS in order to follow best practices.
+
+Let's redo the exercise from Chapter \@(points) in which we created the Space Needle point, but not include the CRS:
+
+```{r}
+snxy <- data.frame(name = "Space Needle", x = -122.3493, y = 47.6205)
+space_needle <- st_as_sf(snxy, coords = c("x", "y"))
+```
+
+When we look at its CRS, it shows `NA`:
+
+```{r}
+st_crs(space_needle)
+```
+
+Because we knew in advance that these coordinates were stored in WGS84 (EPSG 4326), we can now set the data frame's CRS:
+
+```{r}
+st_crs(space_needle) <- 4326
+st_crs(space_needle)
+```
+
+Note that setting the data frame's CRS does not change any coordinate XY values, it is only metadata.
+
+If you want a list of EPSG codes and their descriptions and proj4 values, use the `rgdal` package's `make_EPSG` function. For example what if we wanted the EPSG code for UTM Zone 10 N ...
+
+```{r}
+epsg <- make_EPSG()
+utm10 <- epsg[grep("UTM.*10", epsg$note),]
+kable(utm10) %>% kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+... or if we wanted to find out what EPSG code 2927 is:
+
+```{r}
+kable(epsg %>%filter(code == 2927)) %>% kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
+```
+
+
+
+## Coordinate transformation
+If you have a data set stored in one CRS and you want to transform its coordinates to match another CRS, use `st_transform()` for `sf` data frames or the `projctRaster()` function for raster data sets.
+
+Here we will make a new Space Needle point stored with UTM 10 NAD83. Note the changed coordinates shown in the `geometry` column.
+
+```{r}
+(space_needle_utm10 <- space_needle %>% st_transform(26910))
+```
+
+Or if you want to overwrite the data of an existing data frame with a new CRS:
+
+
+```{r}
+(space_needle <- space_needle %>% st_transform(26910))
+```
+
+which should be done with care because it alters the values of an existing data set.
+
+<!--chapter:end:040-crs.Rmd-->
+
+# Geoprocessing {#geoprocessing}
+
+```{r setup}
+library(sf)
+library(tidycensus)
+library(ggplot2)
+
+mydatadir <- file.path("C:", "users", Sys.getenv("USERNAME"), "Desktop", "r_gis", "data")
+```
+
+## Buffering
+Buffering is one of the most common geoprocessing techniques. `sf` provides the `st_buffer()` command to create Euclidean buffers around vector features. 
+
+Let's create 1 km buffers around the points we created earlier. For this process, first we transform the points to UTM 10 so when we specify a buffer distance of 1,000 that translates to 1 km, and finally we transform to WA State Plane N. 
+
+```{r buf1}
+# create the points
+snxy <- data.frame(name = "Space Needle", x = -122.3493, y = 47.6205)
+space_needle <- st_as_sf(snxy, coords = c("x", "y"), crs = 4326)
+shxy <- data.frame(name = "Savery Hall", x = -122.3083, y = 47.6572)
+savery_hall <- st_as_sf(shxy, coords = c("x", "y"), crs = 4326)
+zooxy <- data.frame(name = "Woodland Park Zoo", x = -122.3543, y = 47.6685)
+wp_zoo <- st_as_sf(zooxy, coords = c("x", "y"), crs = 4326)
+pts <- rbind(space_needle, savery_hall, wp_zoo)
+
+# make the buffer with inline transforms
+pts_buf_1km <- pts %>% st_transform(26910) %>% st_buffer(dist = 1000) %>% st_transform(2926)
+```
+
+Export the point buffers to our GPKG:
+
+```{r export1}
+# write to the GPKG
+mygpkg <- file.path(mydatadir, "r_gis.gpkg")
+st_write(obj = pts_buf_1km, dsn = mygpkg, layer = "pts_buf_1km", quiet = TRUE, update = TRUE)
+```
+
+We will also make 500 ft buffers around the freeways of King County and export them to the GPKG
+
+```{r buf2}
+if(! exists("kctrans")){
+    kctrans <- st_read(
+        file.path(mydatadir, "Metro_Transportation_Network_TNET_in_King_County__trans_network_line.shp"),
+        quiet = TRUE)
+}
+
+# freeways are KC_FCC_ID = F
+kcfwy <- kctrans %>% filter(KC_FCC_ID == "F")
+
+# buffer
+kcfwy_buf_500ft <- kcfwy %>% st_transform(2926) %>% st_buffer(500)
+
+# write to the GPKG
+mygpkg <- file.path(mydatadir, "r_gis.gpkg")
+st_write(obj = kcfwy_buf_500ft, dsn = mygpkg, layer = "kcfwy_buf_500ft", quiet = TRUE, update = TRUE)
+```
+
+What the !#*$&? Why are there all those little tiny buffers around the freeway lines? To be addressed below.... 
+
+![](images/2020-02-11_16_25_12-_esda_20200212a - QGIS.png)
+
+
+## Point-in-polygon
+For the next analysis, we will [tabulate the density of transit stops in each census block group](https://csde.washington.edu/workshop/introduction-to-gis/) and then look for patterns in transit stop density by median household income.
+
+First we need to get the census block groups and median family income using `tidycensus`. Covering the use of `tidycensus` is beyond the scope of this workshop; for an introduction, see the [Computational Demography seminar presented by Connor Gilroy and Neal Marquez](https://csde-uw.github.io/tidycensus-tutorial/). 
+
+Using pipes in `magrittr`, we perform an inline CRS transformation to WA State Plane N and also calculate the area of each bloc group (which we will need for the density measurement later).
+
+
+```{r census1}
+# cache data
+options(tigris_use_cache = TRUE)
+# where to store data
+tigris_cache_dir <- mydatadir
+
+# if you have your API key, enter it here rather than using the system environment variable
+# myapikey <- "foobar"
+myapikey <- Sys.getenv("CENSUS_API_KEY")
+census_api_key(myapikey)
+
+# get the data and project it to match the bus stops, also calculate the area
+acs5_2018_bg <- get_acs(
+    geography = "block group",
+    variables = c(medfamincome="B19113_001"),
+    state = "WA",
+    county = "King",
+    geometry = TRUE,
+    moe = 95,
+    cache_table = TRUE, 
+    output = "wide") %>%
+    st_transform(2926)  %>%
+    mutate(area_ft = as.numeric(st_area(.)))
+
+colnames(acs5_2018_bg) <- tolower(colnames(acs5_2018_bg))
+```
+
+Quickly view the data in a `ggplot()`:
+
+```{r ggplot1}
+acs5_2018_bg %>%
+    ggplot() +
+    geom_sf(aes(fill = medfamincomee), size = .25) +
+    scale_fill_viridis_c() + 
+    theme_void()
+```
+
+Load the bus stops:
+
+```{r busstop}
+busstop <- st_read(
+    file.path(mydatadir, "busstop/busstop.shp"), quiet = TRUE) 
+st_crs(busstop) <- 2926
+colnames(busstop) <- tolower(colnames(busstop))
+```
+
+First, let's look at the column names in `busstop`:
+
+```{r busstop2}
+print(colnames(busstop))
+```
+
+To get the census data as an attribute on each transit stop, use `st_join()`:
+
+```{r join1}
+busstop <- busstop %>% st_join(acs5_2018_bg)
+```
+
+We now see that there are additional variables, particularly `medfamincomee`:
+
+```{r print1}
+print(colnames(busstop))
+```
+
+To calculate density we need a total count of transit stops by census unit id (`GEOID`) as well as the area. Note because all variables are identical within each census units, we can use `medfamincomee = min(medfamincomee)` in the summarize function.
+
+```{r tab}
+# tabulate the count of transit stops
+nbusstop <- busstop %>% 
+    group_by(geoid) %>% 
+    summarise(n_busstop = n(), 
+              density_ha = n() / min(area_ft) * 107639 , 
+              medfamincomee = min(medfamincomee))
+```
+
+Let's make a scatter plot with a regression line and error.
+
+```{r scatterplot}
+nbusstop %>% ggplot(aes(x = medfamincomee, y = density_ha)) + 
+    geom_point() + 
+    geom_smooth(method = "lm") +
+    xlab("block group median family income, ACS-5, 2018") + ylab("transit stop density per ha")
+
+```
+
+Looks like no relationship exists. How about some formal statistics?
+
+```{r lm}
+pander(
+    summary(
+        lm(data = nbusstop, medfamincomee ~ density_ha)))
+```
+
+
+## Polygon-on-polygon
+
+### Intersect
+For the next exercise we will estimate the proportion of persons living below the federal poverty level within Seattle neighborhoods using 2018 ACS data at the tract level (poverty data are not available at the block group level).
+
+First we will load the city neighborhood boundaries, including a CRS transformation to WA State Plane N:
+
+```{r nhoods}
+nhood <- st_read(
+    file.path(mydatadir, "Community_Reporting_Areas.shp"), 
+    quiet = TRUE) %>%
+    st_transform(2926)
+names(nhood) = tolower(names(nhood))
+```
+
+Get the tract data for the total count of persons for whom poverty status was determined and the count of persons living below the poverty level, also transforming to WA State Plane N and calculating the area of the tract:
+
+```{r, message = FALSE}
+# get the data and project it to match the bus stops, also calculate the area
+acs5_2018_trt <- get_acs(
+    year = 2018,
+    geography = "tract",
+    variables = c(n="B06012_001", n_pov="B06012_002"),
+    state = "WA",
+    county = "King",
+    geometry = TRUE,
+    moe = 95,
+    cache_table = TRUE, 
+    output = "wide") %>%
+    st_transform(2926) %>%
+    mutate(area_ft_tract = as.numeric(st_area(.)))
+
+colnames(acs5_2018_bg) <- tolower(colnames(acs5_2018_bg))
+
+```
+
+Intersecting the tracts and neighborhoods will produce a polygon data set with data only for the area in common between both data sets. It will also subdivide polygons wherever there is an overlap between polygons from the different input layers. We also calculate the area of the resultant polygons ("slivers") for estimating person counts within each sliver using area weighting under the (arguably incorrect) assumption that the population is uniformly distributed across the tract. The estimate of the count of persons within each sliver is calculated as 
+
+$$pop_{sliver} = pop_{tract} \times \frac{area_{sliver}}{area_{original}}$$
+
+```{r intersect}
+nhood_trt <- st_intersection(x = nhood, acs5_2018_trt) %>% 
+    mutate(area_ft_intersect = as.numeric(st_area(.)),
+           n_est = nE * as.numeric(st_area(.)) / area_ft_tract, 
+           n_est_pov = n_povE * as.numeric(st_area(.)) / area_ft_tract)
+```
+
+We then sum the area-weighted counts for each neighborhood:
+
+$$\sum_{i=1}^{n} pop_{sliver}$$
+
+where $i$ is the sliver, $n$ is the count of slivers, and $pop_{sliver}$ is the estimated population of the sliver.
+
+This aggregation to the neighborhood level using the estimated counts of the number of persons and the number of persons living below poverty is done with `group_by()` and `summarize()`
+
+```{r nhood_pov}
+nhood_pov <- nhood_trt %>% 
+    group_by(gen_alias) %>% 
+    summarize(
+        neighdist = first(neighdist),
+        n = sum(n_est), 
+        n_pov = sum(n_est_pov), 
+        pct_pov = round(sum(n_est_pov) / sum(n_est) * 100, 1))
+
+```
+
+Let's make a quick plot:
+
+```{r nhood_pov_plot}
+nhood_pov %>%
+    ggplot() +
+    geom_sf(aes(fill = pct_pov), size = .25) +
+    scale_fill_viridis_c() + 
+    theme_void()
+```
+
+```{r nhood_pov_bar}
+nhood_pov %>%
+    ggplot(aes(x = reorder(gen_alias, pct_pov), y=pct_pov)) +
+    geom_bar(stat = "identity") +
+    theme(axis.text.x = element_text(angle = 90, hjust = 1, vjust = 0.5)) +
+    xlab("neighborhood") + ylab("% living under\nfederal poverty level")
+```
+
+[Starving students?](https://www.washington.edu/news/2019/05/10/uw-students-face-food-housing-insecurity-survey-shows/)
+
+We can also export this for mapping in QGIS:
+
+```{r exportpov}
+st_write(obj = nhood_pov, 
+         dsn = mygpkg, 
+         layer = "nhood_pov", 
+         quiet = TRUE, 
+         update = TRUE, 
+         delete_layer = TRUE)
+```
+
+Here shown with quintiles:
+
+![](images/2020-02-12_10_41_58-_esda_20200212a - QGIS.png)
+
+### Union
+`st_union()` will make a single geometry from multiple geometries. We can use this to "dissolve" the freeway buffers we created before. 
+
+Let's pipe together the `st_union()` and `st_write()` to dissolve the buffers and write to the GPKG in one step.
+
+```{r union_write}
+st_write(obj = 
+             st_union(kcfwy_buf_500ft), 
+         dsn = mygpkg, 
+         layer = "kcfwy_buf_500ft_union", 
+         quiet = TRUE, update = TRUE)
+```
+
+Verify in QGIS:
+
+![](images/2020-02-12_10_59_26-_esda_20200212a - QGIS.png)
+
+We can also dissolve based on a variable. In this example we are grouping by the `neighdist` variable, which represents the larger neighborhood districts, and summing the count of persons and the count of persons below the poverty level as well as calculating the percent below poverty. `sf` is doing a geometric `st_union()` behind the scenes.
+
+```{r dissolve}
+# summarize == union
+districts <- nhood_pov %>%
+    group_by(neighdist) %>%
+    summarise(
+        n = sum(n), 
+        n_pov = sum(n_pov),
+        pct_pov = round(sum(n_pov) / sum(n) * 100, 1))
+
+# save
+st_write(obj = districts, dsn = mygpkg, layer = "districts", quiet = TRUE, update = TRUE, delete_layer = TRUE)
+```
+
+Here the dissolved layer is shown in QGIS using poverty percent quintiles.
+
+![](images/2020-02-12_11_53_14-_esda_20200212a - QGIS.png)
+
+<!--chapter:end:050-overlay.Rmd-->
+
+# Leaflet maps {#leaflet}
+
+```{r}
+library(leaflet)
+```
+
+<!--chapter:end:070-leaflet.Rmd-->
+
