@@ -78,4 +78,4 @@ Each of the topics shown below will be covered during the course.
 
 <hr>
 
-GitHub: [gis_in_R](https://github.com/phurvitz/gis_in_R)
+GitHub: [gis_in_R](https://github.com/phurvitz/phurvitz.github.io-gis_in_R)

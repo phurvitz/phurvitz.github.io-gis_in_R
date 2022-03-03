@@ -25,6 +25,3 @@ polygon-on-polygon
 intersect
 union
 leaflet
-source-code
-r-code-used-in-this-document
-complete-rmd-code

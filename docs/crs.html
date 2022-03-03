@@ -195,11 +195,6 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul></li>
 </ul></li>
 <li class="chapter" data-level="7" data-path="leaflet.html"><a href="leaflet.html"><i class="fa fa-check"></i><b>7</b> <code>leaflet</code> and <code>mapview</code> maps</a></li>
-<li class="chapter" data-level="8" data-path="source-code.html"><a href="source-code.html"><i class="fa fa-check"></i><b>8</b> Source code</a>
-<ul>
-<li class="chapter" data-level="8.1" data-path="source-code.html"><a href="source-code.html#r-code-used-in-this-document"><i class="fa fa-check"></i><b>8.1</b> R code used in this document</a></li>
-<li class="chapter" data-level="8.2" data-path="source-code.html"><a href="source-code.html#complete-rmd-code"><i class="fa fa-check"></i><b>8.2</b> Complete Rmd code</a></li>
-</ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
 
@@ -246,14 +241,14 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>If you obtain a spatial data set, one of the things you need to be absolutely certain of is its CRS. Most data sets are provided with either files (e.g., <code>.prj</code> files for shape files) or internal metadata (e.g., embedded in a GeoTIFF), or at least a description of their CRS. If you do not know the CRS of your data, you can <a href="http://gis.washington.edu/phurvitz/gis_data/projection_exercise/">make educated guesses</a>.</p>
 <p>In any case if you have a data set that has no CRS defined, although it may not be absolutely necessary, you should define its CRS in order to follow best practices.</p>
 <p>Let’s redo the exercise from Chapter @(points) in which we created the Space Needle point, but not include the CRS:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb47-1"><a href="crs.html#cb47-1" aria-hidden="true" tabindex="-1"></a>snxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Space Needle&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3493</span>, <span class="at">y =</span> <span class="fl">47.6205</span>)</span>
-<span id="cb47-2"><a href="crs.html#cb47-2" aria-hidden="true" tabindex="-1"></a>space_needle <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(snxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="crs.html#cb43-1" aria-hidden="true" tabindex="-1"></a>snxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Space Needle&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3493</span>, <span class="at">y =</span> <span class="fl">47.6205</span>)</span>
+<span id="cb43-2"><a href="crs.html#cb43-2" aria-hidden="true" tabindex="-1"></a>space_needle <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(snxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>))</span></code></pre></div>
 <p>When we look at its CRS, it shows <code>NA</code>:</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="crs.html#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle)</span></code></pre></div>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="crs.html#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle)</span></code></pre></div>
 <pre><code>## Coordinate Reference System: NA</code></pre>
 <p>Because we knew in advance that these coordinates were stored in WGS84 (EPSG 4326), we can now set the data frame’s CRS:</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="crs.html#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle) <span class="ot">&lt;-</span> <span class="dv">4326</span></span>
-<span id="cb50-2"><a href="crs.html#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle)</span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="crs.html#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle) <span class="ot">&lt;-</span> <span class="dv">4326</span></span>
+<span id="cb46-2"><a href="crs.html#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle)</span></code></pre></div>
 <pre><code>## Coordinate Reference System:
 ##   User input: EPSG:4326 
 ##   wkt:
@@ -277,9 +272,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 ##     ID[&quot;EPSG&quot;,4326]]</code></pre>
 <p>Note that setting the data frame’s CRS does not change any coordinate XY values, it is only metadata.</p>
 <p>If you want a list of EPSG codes and their descriptions and proj4 values, use the <code>rgdal</code> package’s <code>make_EPSG</code> function. For example what if we wanted the EPSG code for UTM Zone 10 N …</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="crs.html#cb52-1" aria-hidden="true" tabindex="-1"></a>epsg <span class="ot">&lt;-</span> <span class="fu">make_EPSG</span>()</span>
-<span id="cb52-2"><a href="crs.html#cb52-2" aria-hidden="true" tabindex="-1"></a>utm10 <span class="ot">&lt;-</span> epsg[<span class="fu">grep</span>(<span class="st">&quot;UTM.*10&quot;</span>, epsg<span class="sc">$</span>note),]</span>
-<span id="cb52-3"><a href="crs.html#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(utm10) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">&quot;striped&quot;</span>, <span class="at">full_width =</span> F, <span class="at">position =</span> <span class="st">&quot;left&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="crs.html#cb48-1" aria-hidden="true" tabindex="-1"></a>epsg <span class="ot">&lt;-</span> <span class="fu">make_EPSG</span>()</span>
+<span id="cb48-2"><a href="crs.html#cb48-2" aria-hidden="true" tabindex="-1"></a>utm10 <span class="ot">&lt;-</span> epsg[<span class="fu">grep</span>(<span class="st">&quot;UTM.*10&quot;</span>, epsg<span class="sc">$</span>note),]</span>
+<span id="cb48-3"><a href="crs.html#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(utm10) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">&quot;striped&quot;</span>, <span class="at">full_width =</span> F, <span class="at">position =</span> <span class="st">&quot;left&quot;</span>)</span></code></pre></div>
 <table class="table table-striped" style="width: auto !important; ">
 <thead>
 <tr>
@@ -524,7 +519,7 @@ NAD83(CSRS) / UTM zone 10N + CGVD2013 height
 </tbody>
 </table>
 <p>… or if we wanted to find out what EPSG code 2927 is:</p>
-<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="crs.html#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(epsg <span class="sc">%&gt;%</span><span class="fu">filter</span>(code <span class="sc">==</span> <span class="dv">2927</span>)) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">&quot;striped&quot;</span>, <span class="at">full_width =</span> F, <span class="at">position =</span> <span class="st">&quot;left&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb49-1"><a href="crs.html#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(epsg <span class="sc">%&gt;%</span><span class="fu">filter</span>(code <span class="sc">==</span> <span class="dv">2927</span>)) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">&quot;striped&quot;</span>, <span class="at">full_width =</span> F, <span class="at">position =</span> <span class="st">&quot;left&quot;</span>)</span></code></pre></div>
 <table class="table table-striped" style="width: auto !important; ">
 <thead>
 <tr>
@@ -564,7 +559,7 @@ Lambert Conic Conformal (2SP)
 <h2><span class="header-section-number">5.4</span> Coordinate transformation</h2>
 <p>If you have a data set stored in one CRS and you want to transform its coordinates to match another CRS, use <code>st_transform()</code> for <code>sf</code> data frames or the <code>projctRaster()</code> function for raster data sets.</p>
 <p>Here we will make a new Space Needle point stored with UTM 10 NAD83. Note the changed coordinates shown in the <code>geometry</code> column.</p>
-<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="crs.html#cb54-1" aria-hidden="true" tabindex="-1"></a>(space_needle_utm10 <span class="ot">&lt;-</span> space_needle <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">26910</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="crs.html#cb50-1" aria-hidden="true" tabindex="-1"></a>(space_needle_utm10 <span class="ot">&lt;-</span> space_needle <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">26910</span>))</span></code></pre></div>
 <pre><code>## Simple feature collection with 1 feature and 1 field
 ## Geometry type: POINT
 ## Dimension:     XY
@@ -573,7 +568,7 @@ Lambert Conic Conformal (2SP)
 ##           name                 geometry
 ## 1 Space Needle POINT (548894.1 5274327)</code></pre>
 <p>Or if you want to overwrite the data of an existing data frame with a new CRS:</p>
-<div class="sourceCode" id="cb56"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb56-1"><a href="crs.html#cb56-1" aria-hidden="true" tabindex="-1"></a>(space_needle <span class="ot">&lt;-</span> space_needle <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">26910</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="crs.html#cb52-1" aria-hidden="true" tabindex="-1"></a>(space_needle <span class="ot">&lt;-</span> space_needle <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">26910</span>))</span></code></pre></div>
 <pre><code>## Simple feature collection with 1 feature and 1 field
 ## Geometry type: POINT
 ## Dimension:     XY

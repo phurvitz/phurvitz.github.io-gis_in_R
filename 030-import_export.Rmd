@@ -14,7 +14,7 @@ if (!interactive()) {
 ## Importing spatial data sets
 The function `st_read()` is essentially wrapper to functions in the Geospatial Data Abstraction Library ([GDAL](http://www.gdal.org/)), which includes translation functions for a large number of GIS data formats.
 
-For this course we will focus on the use of [Esri shape files](https://en.wikipedia.org/wiki/Shapefile) and the Open Geospatial Consortium [GeoPackage (GPKG)](https://www.geopackage.org) format, although `st_read()` can read many different types of spatial data formats, including PostGIS database connnections..
+For this course we will focus on the use of [Esri shape files](https://en.wikipedia.org/wiki/Shapefile) and the Open Geospatial Consortium [GeoPackage (GPKG)](https://www.geopackage.org) format, although `st_read()` can read many different types of spatial data formats, including PostGIS database connections.
 
 We will pay particular attention to the GPKG format. Whereas a shape file can represent only a single spatial layer with a single geometric data type, a GPKG container may contain multiple objects. Also, because shape files are dependent on the dBASE tabular file format for storing attributes, there are various limitations such as 10-character uppercase column names. The underlying format for GPKG files is an SQLite database that can contain multiple different object types, including
 
@@ -46,7 +46,7 @@ colnames(myzipcodes) <- tolower(colnames(myzipcodes))
 st_geometry(myzipcodes) <- "shape"
 ```
 
-By default, `st_read()` prints some metadata during the read opearation (which can be silenced using `quiet = TRUE`). This shows that the data set contains `r nrow(myzipcodes)` records and `r ncol(myzipcodes)` columns (including the geometry columns). It is has multipolygon geometry, meaning that a single record can contain multiple rings (e.g., if a single ZIP code area straddled a stream), and its spatial reference is WGS84 (coordinates as degrees of latitude and longitude).
+By default, `st_read()` prints some metadata during the read operation (which can be silenced using `quiet = TRUE`). This shows that the data set contains `r nrow(myzipcodes)` records and `r ncol(myzipcodes)` columns (including the geometry columns). It is has multipolygon geometry, meaning that a single record can contain multiple rings (e.g., if a single ZIP code area straddled a stream), and its spatial reference is WGS84 (coordinates as degrees of latitude and longitude).
 
 To make a manageable data set, let's extract only those ZIP codes areas for Washington State.
 
@@ -60,7 +60,7 @@ The first several records:
 head(zip_wa)
 ```
 
-We can now plot the ZIP code polygons. The default `plot()` function will create a separate graph for each variable; to only show the geometries, specify plotting only the column represeting geometry. 
+We can now plot the ZIP code polygons. The default `plot()` function will create a separate graph for each variable; to only show the geometries, specify plotting only the column representing geometry. 
 
 ```{r zipwa2}
 plot(x = zip_wa$shape, axes = TRUE)
@@ -114,12 +114,6 @@ Switch to QGIS and load the exported Washington State ZIP codes as a layer. Note
 ![](images/2020-02-11_00_53_52-_esda_20200212a - QGIS.png)
 
 Next, we will write the first data sets we created (point, linestring, and polygon) and the WA ZIP code areas into a GPKG.
-
-```{r drop1, echo=FALSE, message=FALSE}
-if(file.exists(file.path(mydatadir, "r_gis.gpkg"))){
-    #O <- file.remove(file.path(mydatadir, "r_gis.gpkg"))
-}
-```
 
 ```{r multiwrite}
 st_write(obj = pts,
