@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 4 Importing and exporting spatial data sets | Reproducible GIS analysis with R</title>
+  <meta name="description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  <meta name="generator" content="bookdown 0.24.4 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 4 Importing and exporting spatial data sets | Reproducible GIS analysis with R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 4 Importing and exporting spatial data sets | Reproducible GIS analysis with R" />
+  
+  <meta name="twitter:description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  
+
+<meta name="author" content="Phil Hurvitz" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="representation.html"/>
+<link rel="next" href="crs.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.0.4.1/leaflet-providers-plugin.js"></script>
+<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
+<script src="libs/HomeButton-0.0.1/home-button.js"></script>
+<script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
+<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Reproducible GIS analysis with R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="getting_started.html"><a href="getting_started.html"><i class="fa fa-check"></i><b>2</b> Getting started</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting_started.html"><a href="getting_started.html#install-necessary-packages"><i class="fa fa-check"></i><b>2.1</b> Install necessary packages</a></li>
+<li class="chapter" data-level="2.2" data-path="getting_started.html"><a href="getting_started.html#create-an-rstudio-project"><i class="fa fa-check"></i><b>2.2</b> Create an RStudio project</a></li>
+<li class="chapter" data-level="2.3" data-path="getting_started.html"><a href="getting_started.html#download-files"><i class="fa fa-check"></i><b>2.3</b> Download files</a></li>
+<li class="chapter" data-level="2.4" data-path="getting_started.html"><a href="getting_started.html#preview-data"><i class="fa fa-check"></i><b>2.4</b> Preview data</a></li>
+<li class="chapter" data-level="2.5" data-path="getting_started.html"><a href="getting_started.html#save-your-project"><i class="fa fa-check"></i><b>2.5</b> Save your project</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="representation.html"><a href="representation.html"><i class="fa fa-check"></i><b>3</b> Representation of spatial features</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="representation.html"><a href="representation.html#points"><i class="fa fa-check"></i><b>3.1</b> Points</a></li>
+<li class="chapter" data-level="3.2" data-path="representation.html"><a href="representation.html#linestrings"><i class="fa fa-check"></i><b>3.2</b> Linestrings</a></li>
+<li class="chapter" data-level="3.3" data-path="representation.html"><a href="representation.html#polygons"><i class="fa fa-check"></i><b>3.3</b> Polygons</a></li>
+<li class="chapter" data-level="3.4" data-path="representation.html"><a href="representation.html#conclusion"><i class="fa fa-check"></i><b>3.4</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="import-export.html"><a href="import-export.html"><i class="fa fa-check"></i><b>4</b> Importing and exporting spatial data sets</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="import-export.html"><a href="import-export.html#importing-spatial-data-sets"><i class="fa fa-check"></i><b>4.1</b> Importing spatial data sets</a></li>
+<li class="chapter" data-level="4.2" data-path="import-export.html"><a href="import-export.html#export"><i class="fa fa-check"></i><b>4.2</b> Exporting spatial data</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="crs.html"><a href="crs.html"><i class="fa fa-check"></i><b>5</b> Handling projections and coordinate systems</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="crs.html"><a href="crs.html#projections-and-coordinate-systems"><i class="fa fa-check"></i><b>5.1</b> Projections and coordinate systems</a></li>
+<li class="chapter" data-level="5.2" data-path="crs.html"><a href="crs.html#on-the-fly-projection-in-desktop-gis"><i class="fa fa-check"></i><b>5.2</b> On-the-fly projection in desktop GIS</a></li>
+<li class="chapter" data-level="5.3" data-path="crs.html"><a href="crs.html#defining-a-data-sets-coordinate-reference-system"><i class="fa fa-check"></i><b>5.3</b> Defining a data set’s coordinate reference system</a></li>
+<li class="chapter" data-level="5.4" data-path="crs.html"><a href="crs.html#coordinate-transformation"><i class="fa fa-check"></i><b>5.4</b> Coordinate transformation</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="geoprocessing.html"><a href="geoprocessing.html"><i class="fa fa-check"></i><b>6</b> Geoprocessing</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="geoprocessing.html"><a href="geoprocessing.html#buffering"><i class="fa fa-check"></i><b>6.1</b> Buffering</a></li>
+<li class="chapter" data-level="6.2" data-path="geoprocessing.html"><a href="geoprocessing.html#point-in-polygon"><i class="fa fa-check"></i><b>6.2</b> Point-in-polygon</a></li>
+<li class="chapter" data-level="6.3" data-path="geoprocessing.html"><a href="geoprocessing.html#polygon-on-polygon"><i class="fa fa-check"></i><b>6.3</b> Polygon-on-polygon</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="geoprocessing.html"><a href="geoprocessing.html#intersect"><i class="fa fa-check"></i><b>6.3.1</b> Intersect</a></li>
+<li class="chapter" data-level="6.3.2" data-path="geoprocessing.html"><a href="geoprocessing.html#union"><i class="fa fa-check"></i><b>6.3.2</b> Union</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="leaflet.html"><a href="leaflet.html"><i class="fa fa-check"></i><b>7</b> <code>leaflet</code> and <code>mapview</code> maps</a></li>
+<li class="chapter" data-level="8" data-path="source-code.html"><a href="source-code.html"><i class="fa fa-check"></i><b>8</b> Source code</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="source-code.html"><a href="source-code.html#r-code-used-in-this-document"><i class="fa fa-check"></i><b>8.1</b> R code used in this document</a></li>
+<li class="chapter" data-level="8.2" data-path="source-code.html"><a href="source-code.html#complete-rmd-code"><i class="fa fa-check"></i><b>8.2</b> Complete Rmd code</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Reproducible GIS analysis with R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="import-export" class="section level1" number="4">
+<h1><span class="header-section-number">Chapter 4</span> Importing and exporting spatial data sets</h1>
+<div id="importing-spatial-data-sets" class="section level2" number="4.1">
+<h2><span class="header-section-number">4.1</span> Importing spatial data sets</h2>
+<p>The function <code>st_read()</code> is essentially wrapper to functions in the Geospatial Data Abstraction Library (<a href="http://www.gdal.org/">GDAL</a>), which includes translation functions for a large number of GIS data formats.</p>
+<p>For this course we will focus on the use of <a href="https://en.wikipedia.org/wiki/Shapefile">Esri shape files</a> and the Open Geospatial Consortium <a href="https://www.geopackage.org">GeoPackage (GPKG)</a> format, although <code>st_read()</code> can read many different types of spatial data formats, including PostGIS database connnections..</p>
+<p>We will pay particular attention to the GPKG format. Whereas a shape file can represent only a single spatial layer with a single geometric data type, a GPKG container may contain multiple objects. Also, because shape files are dependent on the dBASE tabular file format for storing attributes, there are various limitations such as 10-character uppercase column names. The underlying format for GPKG files is an SQLite database that can contain multiple different object types, including</p>
+<ul>
+<li>vector features</li>
+<li>tile matrix sets of imagery and raster maps at various scales</li>
+<li>attributes (non-spatial data)</li>
+<li>extensions</li>
+</ul>
+<p>For those familiar with Esri software, the GPKG is similar in concept to the Esri geodatabase format. However, the GPKG is open source rather than proprietary, and can be accessed directly through either GIS software that can read the format, or within an SQLite database connection for SQL operations.</p>
+<p>Let’s read the ZIP code data, which are in an Esri file geodatabase. In order to read some formats it is necessary to have drivers installed–therefore not all computers can necessarily open all file types. <strong>[Was anyone not able to open the GDB?]</strong></p>
+<p>In order to run this code chunk it will be necessary to edit the path where you downloaded the data (<code>mydatadir</code>).</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="import-export.html#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># path to the data</span></span>
+<span id="cb21-2"><a href="import-export.html#cb21-2" aria-hidden="true" tabindex="-1"></a>mydatadir <span class="ot">&lt;-</span> <span class="st">&quot;H:/gis_in_r/data&quot;</span></span>
+<span id="cb21-3"><a href="import-export.html#cb21-3" aria-hidden="true" tabindex="-1"></a>zippolyfname <span class="ot">&lt;-</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;zip_poly.gdb&quot;</span>)</span>
+<span id="cb21-4"><a href="import-export.html#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co"># avoid reading over and over</span></span>
+<span id="cb21-5"><a href="import-export.html#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">exists</span>(<span class="st">&quot;myzipcodes&quot;</span>)){</span>
+<span id="cb21-6"><a href="import-export.html#cb21-6" aria-hidden="true" tabindex="-1"></a>    myzipcodes <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> zippolyfname, <span class="at">layer =</span> <span class="st">&quot;zip_poly&quot;</span>, <span class="at">as_tibble =</span> <span class="cn">TRUE</span>, <span class="at">geometry_column =</span> <span class="st">&quot;Shape&quot;</span>)</span>
+<span id="cb21-7"><a href="import-export.html#cb21-7" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div>
+<pre><code>## Reading layer `zip_poly&#39; from data source `H:\gis_in_r\data\zip_poly.gdb&#39; using driver `OpenFileGDB&#39;</code></pre>
+<pre><code>## Warning in CPL_read_ogr(dsn, layer, query, as.character(options), quiet, : GDAL Message 1: organizePolygons()
+## received a polygon with more than 100 parts. The processing may be really slow. You can skip the processing
+## by setting METHOD=SKIP, or only make it analyze counter-clock wise parts by setting METHOD=ONLY_CCW if you can
+## assume that the outline of holes is counter-clock wise defined</code></pre>
+<pre><code>## Simple feature collection with 30924 features and 8 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -179.1473 ymin: 13.23419 xmax: 179.7785 ymax: 71.39048
+## Geodetic CRS:  WGS 84</code></pre>
+<div class="sourceCode" id="cb25"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb25-1"><a href="import-export.html#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># change the data frame&#39;s column names to lowercase</span></span>
+<span id="cb25-2"><a href="import-export.html#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(myzipcodes) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(myzipcodes))</span>
+<span id="cb25-3"><a href="import-export.html#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># after renaming columns it is necessary to re-establish which column contains the geometry</span></span>
+<span id="cb25-4"><a href="import-export.html#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry</span>(myzipcodes) <span class="ot">&lt;-</span> <span class="st">&quot;shape&quot;</span></span></code></pre></div>
+<p>By default, <code>st_read()</code> prints some metadata during the read opearation (which can be silenced using <code>quiet = TRUE</code>). This shows that the data set contains 30924 records and 9 columns (including the geometry columns). It is has multipolygon geometry, meaning that a single record can contain multiple rings (e.g., if a single ZIP code area straddled a stream), and its spatial reference is WGS84 (coordinates as degrees of latitude and longitude).</p>
+<p>To make a manageable data set, let’s extract only those ZIP codes areas for Washington State.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="import-export.html#cb26-1" aria-hidden="true" tabindex="-1"></a>zip_wa <span class="ot">&lt;-</span> myzipcodes <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">&quot;WA&quot;</span>)</span></code></pre></div>
+<p>The first several records:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb27-1"><a href="import-export.html#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(zip_wa)</span></code></pre></div>
+<pre><code>## Simple feature collection with 6 features and 8 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: -124.0031 ymin: 46.0401 xmax: -119.2583 ymax: 49.0014
+## Geodetic CRS:  WGS 84
+## # A tibble: 6 x 9
+##   zip_code po_name   state population pop_sqmi   sqmi shape_length shape_area                             shape
+##   &lt;chr&gt;    &lt;chr&gt;     &lt;chr&gt;      &lt;int&gt;    &lt;dbl&gt;  &lt;dbl&gt;        &lt;dbl&gt;      &lt;dbl&gt;                &lt;MULTIPOLYGON [°]&gt;
+## 1 00072    National~ WA           -99     -99  1.22e3        4.20     0.386   (((-120.8514 49.00036, -120.8516~
+## 2 00073    Usdoe Ha~ WA           -99     -99  3.24e2        1.63     0.0984  (((-119.4532 46.67924, -119.4554~
+## 3 00074    Yakima I~ WA           -99     -99  1.35e3        4.51     0.408   (((-120.922 46.50699, -120.9216 ~
+## 4 00076    Okanogan~ WA           -99     -99  7.31e2        3.83     0.232   (((-119.9193 49.00003, -119.9192~
+## 5 00195    Long Isl~ WA           -99     -99  8.37e0        0.536    0.00254 (((-123.9722 46.48561, -123.972 ~
+## 6 98001    Auburn    WA         35721    2003. 1.78e1        0.628    0.00549 (((-122.2269 47.34481, -122.2269~</code></pre>
+<p>We can now plot the ZIP code polygons. The default <code>plot()</code> function will create a separate graph for each variable; to only show the geometries, specify plotting only the column represeting geometry.</p>
+<div class="sourceCode" id="cb29"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb29-1"><a href="import-export.html#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> zip_wa<span class="sc">$</span>shape, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p><img src="gis-R_files/figure-html/zipwa2-1.png" width="672" /></p>
+<p>Let’s now read the hospital shape file data.</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb30-1"><a href="import-export.html#cb30-1" aria-hidden="true" tabindex="-1"></a>hospitals <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(mydatadir, <span class="st">&quot;medical_facilities/medical_facilities.shp&quot;</span>))</span></code></pre></div>
+<pre><code>## Reading layer `medical_facilities&#39; from data source `H:\gis_in_r\data\medical_facilities\medical_facilities.shp&#39; using driver `ESRI Shapefile&#39;
+## Simple feature collection with 154 features and 14 fields
+## Geometry type: POINT
+## Dimension:     XY
+## Bounding box:  xmin: 1254366 ymin: 78085.2 xmax: 1395044 ymax: 287325.1
+## Projected CRS: NAD83(HARN) / Washington North (ftUS)</code></pre>
+<p>This shows that there were 154 rows and 15 columns. Shape files do not use EPSG codes for spatial reference, but the <code>proj4string</code> shows the complete unequivocal projection/coordinate system reference.</p>
+<p>Finally, let’s read the water areas.</p>
+<div class="sourceCode" id="cb32"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb32-1"><a href="import-export.html#cb32-1" aria-hidden="true" tabindex="-1"></a>h2o <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(mydatadir, <span class="st">&quot;wtrbdy/wtrbdy.shp&quot;</span>))</span></code></pre></div>
+<pre><code>## Reading layer `wtrbdy&#39; from data source `H:\gis_in_r\data\wtrbdy\wtrbdy.shp&#39; using driver `ESRI Shapefile&#39;
+## Simple feature collection with 15838 features and 16 fields
+## Geometry type: MULTIPOLYGON
+## Dimension:     XY
+## Bounding box:  xmin: 607316.1 ymin: -256676.3 xmax: 1617446 ymax: 765087.4
+## Projected CRS: NAD83(HARN) / Washington North (ftUS)</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb34-1"><a href="import-export.html#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># type = &quot;n&quot; not to plot, but sets xlim and ylim</span></span>
+<span id="cb34-2"><a href="import-export.html#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hospitals<span class="sc">$</span>geometry, <span class="at">type =</span> <span class="st">&quot;n&quot;</span>, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-3"><a href="import-export.html#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="co"># water</span></span>
+<span id="cb34-4"><a href="import-export.html#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(h2o<span class="sc">$</span>geometry, <span class="at">col =</span> <span class="st">&quot;cyan&quot;</span>, <span class="at">border =</span> <span class="dv">0</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-5"><a href="import-export.html#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="co"># hospital points</span></span>
+<span id="cb34-6"><a href="import-export.html#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hospitals<span class="sc">$</span>geometry, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb34-7"><a href="import-export.html#cb34-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ZIP code areas</span></span>
+<span id="cb34-8"><a href="import-export.html#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(zip_wa<span class="sc">$</span>shape, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="dv">0</span>, <span class="at">border =</span> <span class="dv">1</span>)</span>
+<span id="cb34-9"><a href="import-export.html#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span></code></pre></div>
+<p><img src="gis-R_files/figure-html/mixedplot-1.png" width="672" /></p>
+<p>Well the hospitals and water bodies seemed to plot fine. Why don’t we see any ZIP code outlines as we did in QGIS? We will look at this more in Chapter <a href="crs.html#crs">5</a>.</p>
+</div>
+<div id="export" class="section level2" number="4.2">
+<h2><span class="header-section-number">4.2</span> Exporting spatial data</h2>
+<p>Similar to <code>st_read()</code>, <code>st_write()</code> can be used to export spatial data into a variety of formats. In this exercise we will export to shape files and GPKG databases.</p>
+<p>First, we will export the Washington State ZIP code areas to a shape file. Similar to <code>st_read()</code>, <code>st_write()</code> prints an informative message.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb35-1"><a href="import-export.html#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> zip_wa, <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;zip_wa.shp&quot;</span>))</span></code></pre></div>
+<pre><code>## Warning in abbreviate_shapefile_names(obj): Field names abbreviated for ESRI Shapefile driver</code></pre>
+<pre><code>## Writing layer `zip_wa&#39; to data source `H:/gis_in_r/data/zip_wa.shp&#39; using driver `ESRI Shapefile&#39;
+## Writing 547 features with 8 fields and geometry type Multi Polygon.</code></pre>
+<p>Switch to QGIS and load the exported Washington State ZIP codes as a layer. Note that the column names were truncated to 10 characters. Also note that although the ZIP code data are stored in WGS84 latitude and longitude, they seem to overlay nicely with the hospitals, which are stores in WA State Plane north coordinates. <strong>BONUS</strong>: is this “projection on the fly” a good or a bad thing? What do you think I think about it?</p>
+<p><img src="images/2020-02-11_00_53_52-_esda_20200212a%20-%20QGIS.png" /></p>
+<p>Next, we will write the first data sets we created (point, linestring, and polygon) and the WA ZIP code areas into a GPKG.</p>
+<pre><code>## NULL</code></pre>
+<div class="sourceCode" id="cb39"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb39-1"><a href="import-export.html#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> pts,</span>
+<span id="cb39-2"><a href="import-export.html#cb39-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>),</span>
+<span id="cb39-3"><a href="import-export.html#cb39-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;pts&quot;</span>, </span>
+<span id="cb39-4"><a href="import-export.html#cb39-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Deleting layer `pts&#39; using driver `GPKG&#39;
+## Updating layer `pts&#39; to data source `H:/gis_in_r/data/r_gis.gpkg&#39; using driver `GPKG&#39;
+## Writing 3 features with 1 fields and geometry type Point.</code></pre>
+<div class="sourceCode" id="cb41"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb41-1"><a href="import-export.html#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> lnstr,</span>
+<span id="cb41-2"><a href="import-export.html#cb41-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>),</span>
+<span id="cb41-3"><a href="import-export.html#cb41-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;lnstr&quot;</span>,</span>
+<span id="cb41-4"><a href="import-export.html#cb41-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Deleting layer `lnstr&#39; using driver `GPKG&#39;
+## Updating layer `lnstr&#39; to data source `H:/gis_in_r/data/r_gis.gpkg&#39; using driver `GPKG&#39;
+## Writing 1 features with 1 fields and geometry type Line String.</code></pre>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="import-export.html#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> plygn,</span>
+<span id="cb43-2"><a href="import-export.html#cb43-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>),</span>
+<span id="cb43-3"><a href="import-export.html#cb43-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;plygn&quot;</span>,</span>
+<span id="cb43-4"><a href="import-export.html#cb43-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Deleting layer `plygn&#39; using driver `GPKG&#39;
+## Updating layer `plygn&#39; to data source `H:/gis_in_r/data/r_gis.gpkg&#39; using driver `GPKG&#39;
+## Writing 1 features with 0 fields and geometry type Polygon.</code></pre>
+<div class="sourceCode" id="cb45"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb45-1"><a href="import-export.html#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> zip_wa,</span>
+<span id="cb45-2"><a href="import-export.html#cb45-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>),</span>
+<span id="cb45-3"><a href="import-export.html#cb45-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;zip_wa&quot;</span>,</span>
+<span id="cb45-4"><a href="import-export.html#cb45-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Deleting layer `zip_wa&#39; using driver `GPKG&#39;
+## Updating layer `zip_wa&#39; to data source `H:/gis_in_r/data/r_gis.gpkg&#39; using driver `GPKG&#39;
+## Writing 547 features with 8 fields and geometry type Multi Polygon.</code></pre>
+<p>Finally, add these data sets to your QGIS Map.</p>
+<p><img src="images/2020-02-11_09_38_16-esda_20200212a%20-%20QGIS.png" /></p>
+<p><img src="images/2020-02-11_12_43_31-_esda_20200212a%20-%20QGIS.png" /></p>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="representation.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="crs.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/030-import_export.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["gis-R.pdf", "gis-R.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

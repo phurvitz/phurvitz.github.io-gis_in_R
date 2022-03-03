@@ -1,11 +1,22 @@
 # Geoprocessing {#geoprocessing}
 
-```{r setup}
+```{r setup050, include=FALSE}
+# path to this file name
+if (!interactive()) {
+    fnamepath <- current_input(dir = TRUE)
+} else {
+    fnamepath <- ""
+}
+
 library(sf)
 library(tidycensus)
 library(ggplot2)
+```
 
-mydatadir <- file.path("C:", "users", Sys.getenv("USERNAME"), "Desktop", "r_gis", "data")
+Make sure that `mydatadir` points to the location where the GIS data files were downloaded and unzipped.
+
+```{r mydd050}
+mydatadir <- "H:/gis_in_r/data"
 ```
 
 ## Buffering
@@ -32,7 +43,12 @@ Export the point buffers to our GPKG:
 ```{r export1}
 # write to the GPKG
 mygpkg <- file.path(mydatadir, "r_gis.gpkg")
-st_write(obj = pts_buf_1km, dsn = mygpkg, layer = "pts_buf_1km", quiet = TRUE, update = TRUE)
+st_write(obj = pts_buf_1km,
+         dsn = mygpkg,
+         layer = "pts_buf_1km",
+         quiet = TRUE,
+         append = TRUE,
+         delete_layer = TRUE)
 ```
 
 We will also make 500 ft buffers around the freeways of King County and export them to the GPKG

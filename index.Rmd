@@ -3,20 +3,23 @@ title: "Reproducible GIS analysis with R"
 author: "[Phil Hurvitz](mailto:phurvitz@uw.edu)"
 date: '`r format(Sys.time(), "%Y-%m-%d %H:%M")`'
 site: bookdown::bookdown_site
-output: bookdown::html_document2
+output: bookdown::gitbook
 documentclass: book
 bibliography: [book.bib, packages.bib]
 biblio-style: apalike
 link-citations: yes
+github-repo: rstudio/bookdown-demo
 description: "Manual for CSDE Workshop 'Reproducible GIS analysis with R'"
 ---
 
 ```{r, echo=FALSE, warning=FALSE, message=FALSE}
 pacman::p_load(
-    tidyverse,
     sf,
     leaflet,
-    mapview
+    mapview,
+    captioner,
+    knitr,
+    tidyverse
 )
 
 table_nums <- captioner(prefix = "Table")
@@ -73,15 +76,6 @@ Each of the topics shown below will be covered during the course.
 <!--1. Raster functionality-->
 1. Simple interactive maps with `Leaflet` and `mapview`
 
+<hr>
 
-# Source code
-File is at `r fnamepath`.
-
-## R code used in this document
-```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
-```
-
-## Complete Rmd code
-```{r comment=''}
-cat(readLines(fnamepath), sep = '\n')
-```
+GitHub: [gis_in_R](https://github.com/phurvitz/gis_in_R)

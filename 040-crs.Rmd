@@ -1,11 +1,19 @@
 # Handling projections and coordinate systems {#crs}
 
-```{r echo=FALSE}
+```{r setup040, include=FALSE}
 library(knitr)
 library(pander)
 library(kableExtra)
 library(rgdal)
+
+# path to this file name
+if (!interactive()) {
+    fnamepath <- current_input(dir = TRUE)
+} else {
+    fnamepath <- ""
+}
 ```
+
 
 ## Projections and coordinate systems
 Even well-seasoned GIS analysts can stumble over projections and coordinate systems.

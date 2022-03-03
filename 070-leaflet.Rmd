@@ -1,9 +1,6 @@
 # `leaflet` and `mapview` maps {#leaflet}
-```{r}
-library(leaflet)
-library(mapview)
-library(htmltools)
 
+```{r setup070, include=FALSE}
 # path to this file name
 if (!interactive()) {
     fnamepath <- current_input(dir = TRUE)
@@ -94,17 +91,3 @@ l <- addCircleMarkers(map = l,
 
 l
 ```
-
-# Source code
-File is at `r fnamepath`.
-
-## R code used in this document
-```{r ref.label=knitr::all_labels(), echo=TRUE, eval=FALSE}
-```
-
-## Complete Rmd code
-```{r comment=''}
-cat(readLines(fnamepath), sep = '\n')
-```
-
-

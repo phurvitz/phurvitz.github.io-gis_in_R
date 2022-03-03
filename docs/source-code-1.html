@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 8 Source code | Reproducible GIS analysis with R</title>
+  <meta name="description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  <meta name="generator" content="bookdown 0.24.4 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 8 Source code | Reproducible GIS analysis with R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 8 Source code | Reproducible GIS analysis with R" />
+  
+  <meta name="twitter:description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  
+
+<meta name="author" content="Phil Hurvitz" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="leaflet.html"/>
+
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.0.4.1/leaflet-providers-plugin.js"></script>
+<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
+<script src="libs/HomeButton-0.0.1/home-button.js"></script>
+<script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
+<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Reproducible GIS analysis with R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a>
+<ul>
+<li class="chapter" data-level="1.1" data-path="index.html"><a href="index.html#source-code"><i class="fa fa-check"></i><b>1.1</b> Source code</a>
+<ul>
+<li class="chapter" data-level="1.1.1" data-path="index.html"><a href="index.html#r-code-used-in-this-document"><i class="fa fa-check"></i><b>1.1.1</b> R code used in this document</a></li>
+<li class="chapter" data-level="1.1.2" data-path="index.html"><a href="index.html#complete-rmd-code"><i class="fa fa-check"></i><b>1.1.2</b> Complete Rmd code</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="getting_started.html"><a href="getting_started.html"><i class="fa fa-check"></i><b>2</b> Getting started</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting_started.html"><a href="getting_started.html#install-necessary-packages"><i class="fa fa-check"></i><b>2.1</b> Install necessary packages</a></li>
+<li class="chapter" data-level="2.2" data-path="getting_started.html"><a href="getting_started.html#create-an-rstudio-project"><i class="fa fa-check"></i><b>2.2</b> Create an RStudio project</a></li>
+<li class="chapter" data-level="2.3" data-path="getting_started.html"><a href="getting_started.html#download-files"><i class="fa fa-check"></i><b>2.3</b> Download files</a></li>
+<li class="chapter" data-level="2.4" data-path="getting_started.html"><a href="getting_started.html#preview-data"><i class="fa fa-check"></i><b>2.4</b> Preview data</a></li>
+<li class="chapter" data-level="2.5" data-path="getting_started.html"><a href="getting_started.html#save-your-project"><i class="fa fa-check"></i><b>2.5</b> Save your project</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="representation.html"><a href="representation.html"><i class="fa fa-check"></i><b>3</b> Representation of spatial features</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="representation.html"><a href="representation.html#points"><i class="fa fa-check"></i><b>3.1</b> Points</a></li>
+<li class="chapter" data-level="3.2" data-path="representation.html"><a href="representation.html#linestrings"><i class="fa fa-check"></i><b>3.2</b> Linestrings</a></li>
+<li class="chapter" data-level="3.3" data-path="representation.html"><a href="representation.html#polygons"><i class="fa fa-check"></i><b>3.3</b> Polygons</a></li>
+<li class="chapter" data-level="3.4" data-path="representation.html"><a href="representation.html#conclusion"><i class="fa fa-check"></i><b>3.4</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="import-export.html"><a href="import-export.html"><i class="fa fa-check"></i><b>4</b> Importing and exporting spatial data sets</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="import-export.html"><a href="import-export.html#importing-spatial-data-sets"><i class="fa fa-check"></i><b>4.1</b> Importing spatial data sets</a></li>
+<li class="chapter" data-level="4.2" data-path="import-export.html"><a href="import-export.html#export"><i class="fa fa-check"></i><b>4.2</b> Exporting spatial data</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="crs.html"><a href="crs.html"><i class="fa fa-check"></i><b>5</b> Handling projections and coordinate systems</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="crs.html"><a href="crs.html#projections-and-coordinate-systems"><i class="fa fa-check"></i><b>5.1</b> Projections and coordinate systems</a></li>
+<li class="chapter" data-level="5.2" data-path="crs.html"><a href="crs.html#on-the-fly-projection-in-desktop-gis"><i class="fa fa-check"></i><b>5.2</b> On-the-fly projection in desktop GIS</a></li>
+<li class="chapter" data-level="5.3" data-path="crs.html"><a href="crs.html#defining-a-data-sets-coordinate-reference-system"><i class="fa fa-check"></i><b>5.3</b> Defining a data set’s coordinate reference system</a></li>
+<li class="chapter" data-level="5.4" data-path="crs.html"><a href="crs.html#coordinate-transformation"><i class="fa fa-check"></i><b>5.4</b> Coordinate transformation</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="geoprocessing.html"><a href="geoprocessing.html"><i class="fa fa-check"></i><b>6</b> Geoprocessing</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="geoprocessing.html"><a href="geoprocessing.html#buffering"><i class="fa fa-check"></i><b>6.1</b> Buffering</a></li>
+<li class="chapter" data-level="6.2" data-path="geoprocessing.html"><a href="geoprocessing.html#point-in-polygon"><i class="fa fa-check"></i><b>6.2</b> Point-in-polygon</a></li>
+<li class="chapter" data-level="6.3" data-path="geoprocessing.html"><a href="geoprocessing.html#polygon-on-polygon"><i class="fa fa-check"></i><b>6.3</b> Polygon-on-polygon</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="geoprocessing.html"><a href="geoprocessing.html#intersect"><i class="fa fa-check"></i><b>6.3.1</b> Intersect</a></li>
+<li class="chapter" data-level="6.3.2" data-path="geoprocessing.html"><a href="geoprocessing.html#union"><i class="fa fa-check"></i><b>6.3.2</b> Union</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="leaflet.html"><a href="leaflet.html"><i class="fa fa-check"></i><b>7</b> <code>leaflet</code> and <code>mapview</code> maps</a></li>
+<li class="chapter" data-level="8" data-path="source-code-1.html"><a href="source-code-1.html"><i class="fa fa-check"></i><b>8</b> Source code</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="source-code-1.html"><a href="source-code-1.html#r-code-used-in-this-document-1"><i class="fa fa-check"></i><b>8.1</b> R code used in this document</a></li>
+<li class="chapter" data-level="8.2" data-path="source-code-1.html"><a href="source-code-1.html#complete-rmd-code-1"><i class="fa fa-check"></i><b>8.2</b> Complete Rmd code</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Reproducible GIS analysis with R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="source-code-1" class="section level1" number="8">
+<h1><span class="header-section-number">Chapter 8</span> Source code</h1>
+<p>File is at .</p>
+<div id="r-code-used-in-this-document-1" class="section level2" number="8.1">
+<h2><span class="header-section-number">8.1</span> R code used in this document</h2>
+<div class="sourceCode" id="cb112"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb112-1"><a href="source-code-1.html#cb112-1" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(</span>
+<span id="cb112-2"><a href="source-code-1.html#cb112-2" aria-hidden="true" tabindex="-1"></a>    sf,</span>
+<span id="cb112-3"><a href="source-code-1.html#cb112-3" aria-hidden="true" tabindex="-1"></a>    leaflet,</span>
+<span id="cb112-4"><a href="source-code-1.html#cb112-4" aria-hidden="true" tabindex="-1"></a>    mapview,</span>
+<span id="cb112-5"><a href="source-code-1.html#cb112-5" aria-hidden="true" tabindex="-1"></a>    captioner,</span>
+<span id="cb112-6"><a href="source-code-1.html#cb112-6" aria-hidden="true" tabindex="-1"></a>    knitr,</span>
+<span id="cb112-7"><a href="source-code-1.html#cb112-7" aria-hidden="true" tabindex="-1"></a>    tidyverse</span>
+<span id="cb112-8"><a href="source-code-1.html#cb112-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb112-9"><a href="source-code-1.html#cb112-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-10"><a href="source-code-1.html#cb112-10" aria-hidden="true" tabindex="-1"></a>table_nums <span class="ot">&lt;-</span> <span class="fu">captioner</span>(<span class="at">prefix =</span> <span class="st">&quot;Table&quot;</span>)</span>
+<span id="cb112-11"><a href="source-code-1.html#cb112-11" aria-hidden="true" tabindex="-1"></a>figure_nums <span class="ot">&lt;-</span> <span class="fu">captioner</span>(<span class="at">prefix =</span> <span class="st">&quot;Figure&quot;</span>)</span>
+<span id="cb112-12"><a href="source-code-1.html#cb112-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-13"><a href="source-code-1.html#cb112-13" aria-hidden="true" tabindex="-1"></a><span class="co"># path to this file name</span></span>
+<span id="cb112-14"><a href="source-code-1.html#cb112-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">interactive</span>()) {</span>
+<span id="cb112-15"><a href="source-code-1.html#cb112-15" aria-hidden="true" tabindex="-1"></a>    fnamepath <span class="ot">&lt;-</span> <span class="fu">current_input</span>(<span class="at">dir =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-16"><a href="source-code-1.html#cb112-16" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb112-17"><a href="source-code-1.html#cb112-17" aria-hidden="true" tabindex="-1"></a>    fnamepath <span class="ot">&lt;-</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb112-18"><a href="source-code-1.html#cb112-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb112-19"><a href="source-code-1.html#cb112-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">readLines</span>(fnamepath), <span class="at">sep =</span> <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
+<span id="cb112-20"><a href="source-code-1.html#cb112-20" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, .<span class="dv">1</span>, .<span class="dv">1</span>))</span>
+<span id="cb112-21"><a href="source-code-1.html#cb112-21" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pressure, <span class="at">type =</span> <span class="st">&#39;b&#39;</span>, <span class="at">pch =</span> <span class="dv">19</span>)</span>
+<span id="cb112-22"><a href="source-code-1.html#cb112-22" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb112-23"><a href="source-code-1.html#cb112-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>(iris, <span class="dv">20</span>), <span class="at">caption =</span> <span class="st">&#39;Here is a nice table!&#39;</span>,</span>
+<span id="cb112-24"><a href="source-code-1.html#cb112-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">booktabs =</span> <span class="cn">TRUE</span></span>
+<span id="cb112-25"><a href="source-code-1.html#cb112-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb112-26"><a href="source-code-1.html#cb112-26" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb112-27"><a href="source-code-1.html#cb112-27" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb112-28"><a href="source-code-1.html#cb112-28" aria-hidden="true" tabindex="-1"></a>snxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Space Needle&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3493</span>, <span class="at">y =</span> <span class="fl">47.6205</span>)</span>
+<span id="cb112-29"><a href="source-code-1.html#cb112-29" aria-hidden="true" tabindex="-1"></a>space_needle <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(snxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb112-30"><a href="source-code-1.html#cb112-30" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(space_needle)</span>
+<span id="cb112-31"><a href="source-code-1.html#cb112-31" aria-hidden="true" tabindex="-1"></a><span class="fu">st_coordinates</span>(space_needle)</span>
+<span id="cb112-32"><a href="source-code-1.html#cb112-32" aria-hidden="true" tabindex="-1"></a>shxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Savery Hall&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3083</span>, <span class="at">y =</span> <span class="fl">47.6572</span>)</span>
+<span id="cb112-33"><a href="source-code-1.html#cb112-33" aria-hidden="true" tabindex="-1"></a>savery_hall <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(shxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb112-34"><a href="source-code-1.html#cb112-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-35"><a href="source-code-1.html#cb112-35" aria-hidden="true" tabindex="-1"></a><span class="co"># rbind() to put two points in one data frame</span></span>
+<span id="cb112-36"><a href="source-code-1.html#cb112-36" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">rbind</span>(space_needle, savery_hall)</span>
+<span id="cb112-37"><a href="source-code-1.html#cb112-37" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(pts)</span>
+<span id="cb112-38"><a href="source-code-1.html#cb112-38" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pts<span class="sc">$</span>geometry, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-39"><a href="source-code-1.html#cb112-39" aria-hidden="true" tabindex="-1"></a><span class="co"># create a linestring sf data frame </span></span>
+<span id="cb112-40"><a href="source-code-1.html#cb112-40" aria-hidden="true" tabindex="-1"></a>lnstr <span class="ot">&lt;-</span> <span class="fu">st_sfc</span>(<span class="fu">st_linestring</span>(<span class="fu">st_coordinates</span>(pts)), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb112-41"><a href="source-code-1.html#cb112-41" aria-hidden="true" tabindex="-1"></a>lnstr <span class="ot">&lt;-</span> <span class="fu">as_tibble</span>(lnstr) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">od =</span> <span class="st">&quot;Space Needle, Savery Hall&quot;</span>)</span>
+<span id="cb112-42"><a href="source-code-1.html#cb112-42" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pts<span class="sc">$</span>geometry, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-43"><a href="source-code-1.html#cb112-43" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="at">x =</span> <span class="fu">st_coordinates</span>(pts), <span class="at">labels =</span> pts<span class="sc">$</span>name)</span>
+<span id="cb112-44"><a href="source-code-1.html#cb112-44" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lnstr<span class="sc">$</span>geometry, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-45"><a href="source-code-1.html#cb112-45" aria-hidden="true" tabindex="-1"></a>zooxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Woodland Park Zoo&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3543</span>, <span class="at">y =</span> <span class="fl">47.6685</span>)</span>
+<span id="cb112-46"><a href="source-code-1.html#cb112-46" aria-hidden="true" tabindex="-1"></a>wp_zoo <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(zooxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb112-47"><a href="source-code-1.html#cb112-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-48"><a href="source-code-1.html#cb112-48" aria-hidden="true" tabindex="-1"></a><span class="co"># rbind() to put two points in one data frame</span></span>
+<span id="cb112-49"><a href="source-code-1.html#cb112-49" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">rbind</span>(pts, wp_zoo)</span>
+<span id="cb112-50"><a href="source-code-1.html#cb112-50" aria-hidden="true" tabindex="-1"></a>(plygn <span class="ot">&lt;-</span> <span class="fu">st_sfc</span>(<span class="fu">st_polygon</span>(<span class="fu">list</span>(<span class="fu">st_coordinates</span>(<span class="fu">rbind</span>(pts, space_needle)))), <span class="at">crs =</span> <span class="dv">4326</span>))</span>
+<span id="cb112-51"><a href="source-code-1.html#cb112-51" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(plygn, <span class="at">col =</span> <span class="st">&quot;cyan&quot;</span>, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-52"><a href="source-code-1.html#cb112-52" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(lnstr<span class="sc">$</span>geometry, <span class="at">col =</span> <span class="dv">2</span>, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">lwd =</span> <span class="dv">3</span>)</span>
+<span id="cb112-53"><a href="source-code-1.html#cb112-53" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(pts<span class="sc">$</span>geometry, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">cex =</span> <span class="dv">2</span>)</span>
+<span id="cb112-54"><a href="source-code-1.html#cb112-54" aria-hidden="true" tabindex="-1"></a><span class="fu">text</span>(<span class="at">x =</span> <span class="fu">st_coordinates</span>(pts), <span class="at">labels =</span> pts<span class="sc">$</span>name)</span>
+<span id="cb112-55"><a href="source-code-1.html#cb112-55" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb112-56"><a href="source-code-1.html#cb112-56" aria-hidden="true" tabindex="-1"></a><span class="co"># path to the data</span></span>
+<span id="cb112-57"><a href="source-code-1.html#cb112-57" aria-hidden="true" tabindex="-1"></a>mydatadir <span class="ot">&lt;-</span> <span class="st">&quot;H:/gis_in_r_bak/data&quot;</span></span>
+<span id="cb112-58"><a href="source-code-1.html#cb112-58" aria-hidden="true" tabindex="-1"></a>zippolyfname <span class="ot">&lt;-</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;zip_poly.gdb&quot;</span>)</span>
+<span id="cb112-59"><a href="source-code-1.html#cb112-59" aria-hidden="true" tabindex="-1"></a><span class="co"># avoid reading over and over</span></span>
+<span id="cb112-60"><a href="source-code-1.html#cb112-60" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">exists</span>(<span class="st">&quot;myzipcodes&quot;</span>)){</span>
+<span id="cb112-61"><a href="source-code-1.html#cb112-61" aria-hidden="true" tabindex="-1"></a>    myzipcodes <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="at">dsn =</span> zippolyfname, <span class="at">layer =</span> <span class="st">&quot;zip_poly&quot;</span>, <span class="at">as_tibble =</span> <span class="cn">TRUE</span>, <span class="at">geometry_column =</span> <span class="st">&quot;Shape&quot;</span>)</span>
+<span id="cb112-62"><a href="source-code-1.html#cb112-62" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb112-63"><a href="source-code-1.html#cb112-63" aria-hidden="true" tabindex="-1"></a><span class="co"># change the data frame&#39;s column names to lowercase</span></span>
+<span id="cb112-64"><a href="source-code-1.html#cb112-64" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(myzipcodes) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(myzipcodes))</span>
+<span id="cb112-65"><a href="source-code-1.html#cb112-65" aria-hidden="true" tabindex="-1"></a><span class="co"># after renaming columns it is necessary to re-establish which column contains the geometry</span></span>
+<span id="cb112-66"><a href="source-code-1.html#cb112-66" aria-hidden="true" tabindex="-1"></a><span class="fu">st_geometry</span>(myzipcodes) <span class="ot">&lt;-</span> <span class="st">&quot;shape&quot;</span></span>
+<span id="cb112-67"><a href="source-code-1.html#cb112-67" aria-hidden="true" tabindex="-1"></a>zip_wa <span class="ot">&lt;-</span> myzipcodes <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(state <span class="sc">==</span> <span class="st">&quot;WA&quot;</span>)</span>
+<span id="cb112-68"><a href="source-code-1.html#cb112-68" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(zip_wa)</span>
+<span id="cb112-69"><a href="source-code-1.html#cb112-69" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(<span class="at">x =</span> zip_wa<span class="sc">$</span>shape, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-70"><a href="source-code-1.html#cb112-70" aria-hidden="true" tabindex="-1"></a>hospitals <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(mydatadir, <span class="st">&quot;medical_facilities/medical_facilities.shp&quot;</span>))</span>
+<span id="cb112-71"><a href="source-code-1.html#cb112-71" aria-hidden="true" tabindex="-1"></a>h2o <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(mydatadir, <span class="st">&quot;wtrbdy/wtrbdy.shp&quot;</span>))</span>
+<span id="cb112-72"><a href="source-code-1.html#cb112-72" aria-hidden="true" tabindex="-1"></a><span class="co"># type = &quot;n&quot; not to plot, but sets xlim and ylim</span></span>
+<span id="cb112-73"><a href="source-code-1.html#cb112-73" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hospitals<span class="sc">$</span>geometry, <span class="at">type =</span> <span class="st">&quot;n&quot;</span>, <span class="at">axes =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-74"><a href="source-code-1.html#cb112-74" aria-hidden="true" tabindex="-1"></a><span class="co"># water</span></span>
+<span id="cb112-75"><a href="source-code-1.html#cb112-75" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(h2o<span class="sc">$</span>geometry, <span class="at">col =</span> <span class="st">&quot;cyan&quot;</span>, <span class="at">border =</span> <span class="dv">0</span>, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-76"><a href="source-code-1.html#cb112-76" aria-hidden="true" tabindex="-1"></a><span class="co"># hospital points</span></span>
+<span id="cb112-77"><a href="source-code-1.html#cb112-77" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(hospitals<span class="sc">$</span>geometry, <span class="at">add =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-78"><a href="source-code-1.html#cb112-78" aria-hidden="true" tabindex="-1"></a><span class="co"># ZIP code areas</span></span>
+<span id="cb112-79"><a href="source-code-1.html#cb112-79" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(zip_wa<span class="sc">$</span>shape, <span class="at">add =</span> <span class="cn">TRUE</span>, <span class="at">col =</span> <span class="dv">0</span>, <span class="at">border =</span> <span class="dv">1</span>)</span>
+<span id="cb112-80"><a href="source-code-1.html#cb112-80" aria-hidden="true" tabindex="-1"></a><span class="fu">box</span>()</span>
+<span id="cb112-81"><a href="source-code-1.html#cb112-81" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">file.exists</span>(<span class="fu">file.path</span>(mydatadir, <span class="st">&quot;zip_wa.shp&quot;</span>))){</span>
+<span id="cb112-82"><a href="source-code-1.html#cb112-82" aria-hidden="true" tabindex="-1"></a>    O <span class="ot">&lt;-</span> <span class="fu">file.remove</span>(<span class="fu">file.path</span>(mydatadir, <span class="st">&quot;zip_wa.shp&quot;</span>))</span>
+<span id="cb112-83"><a href="source-code-1.html#cb112-83" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb112-84"><a href="source-code-1.html#cb112-84" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> zip_wa, <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;zip_wa.shp&quot;</span>))</span>
+<span id="cb112-85"><a href="source-code-1.html#cb112-85" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">file.exists</span>(<span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>))){</span>
+<span id="cb112-86"><a href="source-code-1.html#cb112-86" aria-hidden="true" tabindex="-1"></a>    <span class="co">#O &lt;- file.remove(file.path(mydatadir, &quot;r_gis.gpkg&quot;))</span></span>
+<span id="cb112-87"><a href="source-code-1.html#cb112-87" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb112-88"><a href="source-code-1.html#cb112-88" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> pts,</span>
+<span id="cb112-89"><a href="source-code-1.html#cb112-89" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>),</span>
+<span id="cb112-90"><a href="source-code-1.html#cb112-90" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;pts&quot;</span>, </span>
+<span id="cb112-91"><a href="source-code-1.html#cb112-91" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-92"><a href="source-code-1.html#cb112-92" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> lnstr,</span>
+<span id="cb112-93"><a href="source-code-1.html#cb112-93" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>),</span>
+<span id="cb112-94"><a href="source-code-1.html#cb112-94" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;lnstr&quot;</span>,</span>
+<span id="cb112-95"><a href="source-code-1.html#cb112-95" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-96"><a href="source-code-1.html#cb112-96" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> plygn,</span>
+<span id="cb112-97"><a href="source-code-1.html#cb112-97" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>),</span>
+<span id="cb112-98"><a href="source-code-1.html#cb112-98" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;plygn&quot;</span>,</span>
+<span id="cb112-99"><a href="source-code-1.html#cb112-99" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-100"><a href="source-code-1.html#cb112-100" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> zip_wa,</span>
+<span id="cb112-101"><a href="source-code-1.html#cb112-101" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>),</span>
+<span id="cb112-102"><a href="source-code-1.html#cb112-102" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;zip_wa&quot;</span>,</span>
+<span id="cb112-103"><a href="source-code-1.html#cb112-103" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-104"><a href="source-code-1.html#cb112-104" aria-hidden="true" tabindex="-1"></a>         </span>
+<span id="cb112-105"><a href="source-code-1.html#cb112-105" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb112-106"><a href="source-code-1.html#cb112-106" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pander)</span>
+<span id="cb112-107"><a href="source-code-1.html#cb112-107" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(kableExtra)</span>
+<span id="cb112-108"><a href="source-code-1.html#cb112-108" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgdal)</span>
+<span id="cb112-109"><a href="source-code-1.html#cb112-109" aria-hidden="true" tabindex="-1"></a>snxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Space Needle&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3493</span>, <span class="at">y =</span> <span class="fl">47.6205</span>)</span>
+<span id="cb112-110"><a href="source-code-1.html#cb112-110" aria-hidden="true" tabindex="-1"></a>space_needle <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(snxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>))</span>
+<span id="cb112-111"><a href="source-code-1.html#cb112-111" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle)</span>
+<span id="cb112-112"><a href="source-code-1.html#cb112-112" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle) <span class="ot">&lt;-</span> <span class="dv">4326</span></span>
+<span id="cb112-113"><a href="source-code-1.html#cb112-113" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(space_needle)</span>
+<span id="cb112-114"><a href="source-code-1.html#cb112-114" aria-hidden="true" tabindex="-1"></a>epsg <span class="ot">&lt;-</span> <span class="fu">make_EPSG</span>()</span>
+<span id="cb112-115"><a href="source-code-1.html#cb112-115" aria-hidden="true" tabindex="-1"></a>utm10 <span class="ot">&lt;-</span> epsg[<span class="fu">grep</span>(<span class="st">&quot;UTM.*10&quot;</span>, epsg<span class="sc">$</span>note),]</span>
+<span id="cb112-116"><a href="source-code-1.html#cb112-116" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(utm10) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">&quot;striped&quot;</span>, <span class="at">full_width =</span> F, <span class="at">position =</span> <span class="st">&quot;left&quot;</span>)</span>
+<span id="cb112-117"><a href="source-code-1.html#cb112-117" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(epsg <span class="sc">%&gt;%</span><span class="fu">filter</span>(code <span class="sc">==</span> <span class="dv">2927</span>)) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="st">&quot;striped&quot;</span>, <span class="at">full_width =</span> F, <span class="at">position =</span> <span class="st">&quot;left&quot;</span>)</span>
+<span id="cb112-118"><a href="source-code-1.html#cb112-118" aria-hidden="true" tabindex="-1"></a>(space_needle_utm10 <span class="ot">&lt;-</span> space_needle <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">26910</span>))</span>
+<span id="cb112-119"><a href="source-code-1.html#cb112-119" aria-hidden="true" tabindex="-1"></a>(space_needle <span class="ot">&lt;-</span> space_needle <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">26910</span>))</span>
+<span id="cb112-120"><a href="source-code-1.html#cb112-120" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb112-121"><a href="source-code-1.html#cb112-121" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidycensus)</span>
+<span id="cb112-122"><a href="source-code-1.html#cb112-122" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb112-123"><a href="source-code-1.html#cb112-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-124"><a href="source-code-1.html#cb112-124" aria-hidden="true" tabindex="-1"></a>mydatadir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="st">&quot;C:&quot;</span>, <span class="st">&quot;users&quot;</span>, <span class="fu">Sys.getenv</span>(<span class="st">&quot;USERNAME&quot;</span>), <span class="st">&quot;Desktop&quot;</span>, <span class="st">&quot;r_gis&quot;</span>, <span class="st">&quot;data&quot;</span>)</span>
+<span id="cb112-125"><a href="source-code-1.html#cb112-125" aria-hidden="true" tabindex="-1"></a>mydatadir <span class="ot">&lt;-</span> <span class="st">&quot;H:/gis_in_r_bak/data&quot;</span></span>
+<span id="cb112-126"><a href="source-code-1.html#cb112-126" aria-hidden="true" tabindex="-1"></a><span class="co"># create the points</span></span>
+<span id="cb112-127"><a href="source-code-1.html#cb112-127" aria-hidden="true" tabindex="-1"></a>snxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Space Needle&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3493</span>, <span class="at">y =</span> <span class="fl">47.6205</span>)</span>
+<span id="cb112-128"><a href="source-code-1.html#cb112-128" aria-hidden="true" tabindex="-1"></a>space_needle <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(snxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb112-129"><a href="source-code-1.html#cb112-129" aria-hidden="true" tabindex="-1"></a>shxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Savery Hall&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3083</span>, <span class="at">y =</span> <span class="fl">47.6572</span>)</span>
+<span id="cb112-130"><a href="source-code-1.html#cb112-130" aria-hidden="true" tabindex="-1"></a>savery_hall <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(shxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb112-131"><a href="source-code-1.html#cb112-131" aria-hidden="true" tabindex="-1"></a>zooxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Woodland Park Zoo&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3543</span>, <span class="at">y =</span> <span class="fl">47.6685</span>)</span>
+<span id="cb112-132"><a href="source-code-1.html#cb112-132" aria-hidden="true" tabindex="-1"></a>wp_zoo <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(zooxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb112-133"><a href="source-code-1.html#cb112-133" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">rbind</span>(space_needle, savery_hall, wp_zoo)</span>
+<span id="cb112-134"><a href="source-code-1.html#cb112-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-135"><a href="source-code-1.html#cb112-135" aria-hidden="true" tabindex="-1"></a><span class="co"># make the buffer with inline transforms</span></span>
+<span id="cb112-136"><a href="source-code-1.html#cb112-136" aria-hidden="true" tabindex="-1"></a>pts_buf_1km <span class="ot">&lt;-</span> pts <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">26910</span>) <span class="sc">%&gt;%</span> <span class="fu">st_buffer</span>(<span class="at">dist =</span> <span class="dv">1000</span>) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">2926</span>)</span>
+<span id="cb112-137"><a href="source-code-1.html#cb112-137" aria-hidden="true" tabindex="-1"></a><span class="co"># write to the GPKG</span></span>
+<span id="cb112-138"><a href="source-code-1.html#cb112-138" aria-hidden="true" tabindex="-1"></a>mygpkg <span class="ot">&lt;-</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>)</span>
+<span id="cb112-139"><a href="source-code-1.html#cb112-139" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> pts_buf_1km,</span>
+<span id="cb112-140"><a href="source-code-1.html#cb112-140" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> mygpkg,</span>
+<span id="cb112-141"><a href="source-code-1.html#cb112-141" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;pts_buf_1km&quot;</span>,</span>
+<span id="cb112-142"><a href="source-code-1.html#cb112-142" aria-hidden="true" tabindex="-1"></a>         <span class="at">quiet =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb112-143"><a href="source-code-1.html#cb112-143" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb112-144"><a href="source-code-1.html#cb112-144" aria-hidden="true" tabindex="-1"></a>         <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-145"><a href="source-code-1.html#cb112-145" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span> <span class="fu">exists</span>(<span class="st">&quot;kctrans&quot;</span>)){</span>
+<span id="cb112-146"><a href="source-code-1.html#cb112-146" aria-hidden="true" tabindex="-1"></a>    kctrans <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
+<span id="cb112-147"><a href="source-code-1.html#cb112-147" aria-hidden="true" tabindex="-1"></a>        <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;Metro_Transportation_Network_TNET_in_King_County__trans_network_line.shp&quot;</span>),</span>
+<span id="cb112-148"><a href="source-code-1.html#cb112-148" aria-hidden="true" tabindex="-1"></a>        <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-149"><a href="source-code-1.html#cb112-149" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb112-150"><a href="source-code-1.html#cb112-150" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-151"><a href="source-code-1.html#cb112-151" aria-hidden="true" tabindex="-1"></a><span class="co"># freeways are KC_FCC_ID = F</span></span>
+<span id="cb112-152"><a href="source-code-1.html#cb112-152" aria-hidden="true" tabindex="-1"></a>kcfwy <span class="ot">&lt;-</span> kctrans <span class="sc">%&gt;%</span> <span class="fu">filter</span>(KC_FCC_ID <span class="sc">==</span> <span class="st">&quot;F&quot;</span>)</span>
+<span id="cb112-153"><a href="source-code-1.html#cb112-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-154"><a href="source-code-1.html#cb112-154" aria-hidden="true" tabindex="-1"></a><span class="co"># buffer</span></span>
+<span id="cb112-155"><a href="source-code-1.html#cb112-155" aria-hidden="true" tabindex="-1"></a>kcfwy_buf_500ft <span class="ot">&lt;-</span> kcfwy <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">2926</span>) <span class="sc">%&gt;%</span> <span class="fu">st_buffer</span>(<span class="dv">500</span>)</span>
+<span id="cb112-156"><a href="source-code-1.html#cb112-156" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-157"><a href="source-code-1.html#cb112-157" aria-hidden="true" tabindex="-1"></a><span class="co"># write to the GPKG</span></span>
+<span id="cb112-158"><a href="source-code-1.html#cb112-158" aria-hidden="true" tabindex="-1"></a>mygpkg <span class="ot">&lt;-</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>)</span>
+<span id="cb112-159"><a href="source-code-1.html#cb112-159" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> kcfwy_buf_500ft, <span class="at">dsn =</span> mygpkg, <span class="at">layer =</span> <span class="st">&quot;kcfwy_buf_500ft&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">update =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-160"><a href="source-code-1.html#cb112-160" aria-hidden="true" tabindex="-1"></a><span class="co"># cache data</span></span>
+<span id="cb112-161"><a href="source-code-1.html#cb112-161" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-162"><a href="source-code-1.html#cb112-162" aria-hidden="true" tabindex="-1"></a><span class="co"># where to store data</span></span>
+<span id="cb112-163"><a href="source-code-1.html#cb112-163" aria-hidden="true" tabindex="-1"></a>tigris_cache_dir <span class="ot">&lt;-</span> mydatadir</span>
+<span id="cb112-164"><a href="source-code-1.html#cb112-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-165"><a href="source-code-1.html#cb112-165" aria-hidden="true" tabindex="-1"></a><span class="co"># if you have your API key, enter it here rather than using the system environment variable</span></span>
+<span id="cb112-166"><a href="source-code-1.html#cb112-166" aria-hidden="true" tabindex="-1"></a><span class="co"># myapikey &lt;- &quot;foobar&quot;</span></span>
+<span id="cb112-167"><a href="source-code-1.html#cb112-167" aria-hidden="true" tabindex="-1"></a>myapikey <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;CENSUS_API_KEY&quot;</span>)</span>
+<span id="cb112-168"><a href="source-code-1.html#cb112-168" aria-hidden="true" tabindex="-1"></a><span class="fu">census_api_key</span>(myapikey)</span>
+<span id="cb112-169"><a href="source-code-1.html#cb112-169" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-170"><a href="source-code-1.html#cb112-170" aria-hidden="true" tabindex="-1"></a><span class="co"># get the data and project it to match the bus stops, also calculate the area</span></span>
+<span id="cb112-171"><a href="source-code-1.html#cb112-171" aria-hidden="true" tabindex="-1"></a>acs5_2018_bg <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb112-172"><a href="source-code-1.html#cb112-172" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">&quot;block group&quot;</span>,</span>
+<span id="cb112-173"><a href="source-code-1.html#cb112-173" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">medfamincome=</span><span class="st">&quot;B19113_001&quot;</span>),</span>
+<span id="cb112-174"><a href="source-code-1.html#cb112-174" aria-hidden="true" tabindex="-1"></a>    <span class="at">state =</span> <span class="st">&quot;WA&quot;</span>,</span>
+<span id="cb112-175"><a href="source-code-1.html#cb112-175" aria-hidden="true" tabindex="-1"></a>    <span class="at">county =</span> <span class="st">&quot;King&quot;</span>,</span>
+<span id="cb112-176"><a href="source-code-1.html#cb112-176" aria-hidden="true" tabindex="-1"></a>    <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb112-177"><a href="source-code-1.html#cb112-177" aria-hidden="true" tabindex="-1"></a>    <span class="at">moe =</span> <span class="dv">95</span>,</span>
+<span id="cb112-178"><a href="source-code-1.html#cb112-178" aria-hidden="true" tabindex="-1"></a>    <span class="at">cache_table =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb112-179"><a href="source-code-1.html#cb112-179" aria-hidden="true" tabindex="-1"></a>    <span class="at">output =</span> <span class="st">&quot;wide&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-180"><a href="source-code-1.html#cb112-180" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">2926</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb112-181"><a href="source-code-1.html#cb112-181" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">area_ft =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)))</span>
+<span id="cb112-182"><a href="source-code-1.html#cb112-182" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-183"><a href="source-code-1.html#cb112-183" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(acs5_2018_bg) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(acs5_2018_bg))</span>
+<span id="cb112-184"><a href="source-code-1.html#cb112-184" aria-hidden="true" tabindex="-1"></a>acs5_2018_bg <span class="sc">%&gt;%</span></span>
+<span id="cb112-185"><a href="source-code-1.html#cb112-185" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb112-186"><a href="source-code-1.html#cb112-186" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> medfamincomee), <span class="at">size =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
+<span id="cb112-187"><a href="source-code-1.html#cb112-187" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span> </span>
+<span id="cb112-188"><a href="source-code-1.html#cb112-188" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span>
+<span id="cb112-189"><a href="source-code-1.html#cb112-189" aria-hidden="true" tabindex="-1"></a>busstop <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
+<span id="cb112-190"><a href="source-code-1.html#cb112-190" aria-hidden="true" tabindex="-1"></a>    <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;busstop/busstop.shp&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb112-191"><a href="source-code-1.html#cb112-191" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(busstop) <span class="ot">&lt;-</span> <span class="dv">2926</span></span>
+<span id="cb112-192"><a href="source-code-1.html#cb112-192" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(busstop) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(busstop))</span>
+<span id="cb112-193"><a href="source-code-1.html#cb112-193" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">colnames</span>(busstop))</span>
+<span id="cb112-194"><a href="source-code-1.html#cb112-194" aria-hidden="true" tabindex="-1"></a>busstop <span class="ot">&lt;-</span> busstop <span class="sc">%&gt;%</span> <span class="fu">st_join</span>(acs5_2018_bg)</span>
+<span id="cb112-195"><a href="source-code-1.html#cb112-195" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">colnames</span>(busstop))</span>
+<span id="cb112-196"><a href="source-code-1.html#cb112-196" aria-hidden="true" tabindex="-1"></a><span class="co"># tabulate the count of transit stops</span></span>
+<span id="cb112-197"><a href="source-code-1.html#cb112-197" aria-hidden="true" tabindex="-1"></a>nbusstop <span class="ot">&lt;-</span> busstop <span class="sc">%&gt;%</span> </span>
+<span id="cb112-198"><a href="source-code-1.html#cb112-198" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(geoid) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-199"><a href="source-code-1.html#cb112-199" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_busstop =</span> <span class="fu">n</span>(), </span>
+<span id="cb112-200"><a href="source-code-1.html#cb112-200" aria-hidden="true" tabindex="-1"></a>              <span class="at">density_ha =</span> <span class="fu">n</span>() <span class="sc">/</span> <span class="fu">min</span>(area_ft) <span class="sc">*</span> <span class="dv">107639</span> , </span>
+<span id="cb112-201"><a href="source-code-1.html#cb112-201" aria-hidden="true" tabindex="-1"></a>              <span class="at">medfamincomee =</span> <span class="fu">min</span>(medfamincomee))</span>
+<span id="cb112-202"><a href="source-code-1.html#cb112-202" aria-hidden="true" tabindex="-1"></a>nbusstop <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> medfamincomee, <span class="at">y =</span> density_ha)) <span class="sc">+</span> </span>
+<span id="cb112-203"><a href="source-code-1.html#cb112-203" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb112-204"><a href="source-code-1.html#cb112-204" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="sc">+</span></span>
+<span id="cb112-205"><a href="source-code-1.html#cb112-205" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;block group median family income, ACS-5, 2018&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;transit stop density per ha&quot;</span>)</span>
+<span id="cb112-206"><a href="source-code-1.html#cb112-206" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-207"><a href="source-code-1.html#cb112-207" aria-hidden="true" tabindex="-1"></a><span class="fu">pander</span>(</span>
+<span id="cb112-208"><a href="source-code-1.html#cb112-208" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>(</span>
+<span id="cb112-209"><a href="source-code-1.html#cb112-209" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lm</span>(<span class="at">data =</span> nbusstop, medfamincomee <span class="sc">~</span> density_ha)))</span>
+<span id="cb112-210"><a href="source-code-1.html#cb112-210" aria-hidden="true" tabindex="-1"></a>nhood <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
+<span id="cb112-211"><a href="source-code-1.html#cb112-211" aria-hidden="true" tabindex="-1"></a>    <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;Community_Reporting_Areas.shp&quot;</span>), </span>
+<span id="cb112-212"><a href="source-code-1.html#cb112-212" aria-hidden="true" tabindex="-1"></a>    <span class="at">quiet =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-213"><a href="source-code-1.html#cb112-213" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">2926</span>)</span>
+<span id="cb112-214"><a href="source-code-1.html#cb112-214" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(nhood) <span class="ot">=</span> <span class="fu">tolower</span>(<span class="fu">names</span>(nhood))</span>
+<span id="cb112-215"><a href="source-code-1.html#cb112-215" aria-hidden="true" tabindex="-1"></a><span class="co"># get the data and project it to match the bus stops, also calculate the area</span></span>
+<span id="cb112-216"><a href="source-code-1.html#cb112-216" aria-hidden="true" tabindex="-1"></a>acs5_2018_trt <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb112-217"><a href="source-code-1.html#cb112-217" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="dv">2018</span>,</span>
+<span id="cb112-218"><a href="source-code-1.html#cb112-218" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">&quot;tract&quot;</span>,</span>
+<span id="cb112-219"><a href="source-code-1.html#cb112-219" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">n=</span><span class="st">&quot;B06012_001&quot;</span>, <span class="at">n_pov=</span><span class="st">&quot;B06012_002&quot;</span>),</span>
+<span id="cb112-220"><a href="source-code-1.html#cb112-220" aria-hidden="true" tabindex="-1"></a>    <span class="at">state =</span> <span class="st">&quot;WA&quot;</span>,</span>
+<span id="cb112-221"><a href="source-code-1.html#cb112-221" aria-hidden="true" tabindex="-1"></a>    <span class="at">county =</span> <span class="st">&quot;King&quot;</span>,</span>
+<span id="cb112-222"><a href="source-code-1.html#cb112-222" aria-hidden="true" tabindex="-1"></a>    <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb112-223"><a href="source-code-1.html#cb112-223" aria-hidden="true" tabindex="-1"></a>    <span class="at">moe =</span> <span class="dv">95</span>,</span>
+<span id="cb112-224"><a href="source-code-1.html#cb112-224" aria-hidden="true" tabindex="-1"></a>    <span class="at">cache_table =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb112-225"><a href="source-code-1.html#cb112-225" aria-hidden="true" tabindex="-1"></a>    <span class="at">output =</span> <span class="st">&quot;wide&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-226"><a href="source-code-1.html#cb112-226" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">2926</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-227"><a href="source-code-1.html#cb112-227" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">area_ft_tract =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)))</span>
+<span id="cb112-228"><a href="source-code-1.html#cb112-228" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-229"><a href="source-code-1.html#cb112-229" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(acs5_2018_trt) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(acs5_2018_trt))</span>
+<span id="cb112-230"><a href="source-code-1.html#cb112-230" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-231"><a href="source-code-1.html#cb112-231" aria-hidden="true" tabindex="-1"></a>nhood_trt <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(<span class="at">x =</span> nhood, acs5_2018_trt) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-232"><a href="source-code-1.html#cb112-232" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">area_ft_intersect =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)),</span>
+<span id="cb112-233"><a href="source-code-1.html#cb112-233" aria-hidden="true" tabindex="-1"></a>           <span class="at">n_est =</span> ne <span class="sc">*</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)) <span class="sc">/</span> area_ft_tract, </span>
+<span id="cb112-234"><a href="source-code-1.html#cb112-234" aria-hidden="true" tabindex="-1"></a>           <span class="at">n_est_pov =</span> n_pove <span class="sc">*</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)) <span class="sc">/</span> area_ft_tract)</span>
+<span id="cb112-235"><a href="source-code-1.html#cb112-235" aria-hidden="true" tabindex="-1"></a>nhood_pov <span class="ot">&lt;-</span> nhood_trt <span class="sc">%&gt;%</span> </span>
+<span id="cb112-236"><a href="source-code-1.html#cb112-236" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(gen_alias) <span class="sc">%&gt;%</span> </span>
+<span id="cb112-237"><a href="source-code-1.html#cb112-237" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb112-238"><a href="source-code-1.html#cb112-238" aria-hidden="true" tabindex="-1"></a>        <span class="at">neighdist =</span> <span class="fu">first</span>(neighdist),</span>
+<span id="cb112-239"><a href="source-code-1.html#cb112-239" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">sum</span>(n_est), </span>
+<span id="cb112-240"><a href="source-code-1.html#cb112-240" aria-hidden="true" tabindex="-1"></a>        <span class="at">n_pov =</span> <span class="fu">sum</span>(n_est_pov), </span>
+<span id="cb112-241"><a href="source-code-1.html#cb112-241" aria-hidden="true" tabindex="-1"></a>        <span class="at">pct_pov =</span> <span class="fu">round</span>(<span class="fu">sum</span>(n_est_pov) <span class="sc">/</span> <span class="fu">sum</span>(n_est) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb112-242"><a href="source-code-1.html#cb112-242" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-243"><a href="source-code-1.html#cb112-243" aria-hidden="true" tabindex="-1"></a>nhood_pov <span class="sc">%&gt;%</span></span>
+<span id="cb112-244"><a href="source-code-1.html#cb112-244" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb112-245"><a href="source-code-1.html#cb112-245" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pct_pov), <span class="at">size =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
+<span id="cb112-246"><a href="source-code-1.html#cb112-246" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span> </span>
+<span id="cb112-247"><a href="source-code-1.html#cb112-247" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span>
+<span id="cb112-248"><a href="source-code-1.html#cb112-248" aria-hidden="true" tabindex="-1"></a>nhood_pov <span class="sc">%&gt;%</span></span>
+<span id="cb112-249"><a href="source-code-1.html#cb112-249" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(gen_alias, pct_pov), <span class="at">y=</span>pct_pov)) <span class="sc">+</span></span>
+<span id="cb112-250"><a href="source-code-1.html#cb112-250" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb112-251"><a href="source-code-1.html#cb112-251" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb112-252"><a href="source-code-1.html#cb112-252" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;neighborhood&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;% living under</span><span class="sc">\n</span><span class="st">federal poverty level&quot;</span>)</span>
+<span id="cb112-253"><a href="source-code-1.html#cb112-253" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> nhood_pov, </span>
+<span id="cb112-254"><a href="source-code-1.html#cb112-254" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> mygpkg, </span>
+<span id="cb112-255"><a href="source-code-1.html#cb112-255" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;nhood_pov&quot;</span>, </span>
+<span id="cb112-256"><a href="source-code-1.html#cb112-256" aria-hidden="true" tabindex="-1"></a>         <span class="at">quiet =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb112-257"><a href="source-code-1.html#cb112-257" aria-hidden="true" tabindex="-1"></a>         <span class="at">update =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb112-258"><a href="source-code-1.html#cb112-258" aria-hidden="true" tabindex="-1"></a>         <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-259"><a href="source-code-1.html#cb112-259" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> </span>
+<span id="cb112-260"><a href="source-code-1.html#cb112-260" aria-hidden="true" tabindex="-1"></a>             <span class="fu">st_union</span>(kcfwy_buf_500ft), </span>
+<span id="cb112-261"><a href="source-code-1.html#cb112-261" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> mygpkg, </span>
+<span id="cb112-262"><a href="source-code-1.html#cb112-262" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;kcfwy_buf_500ft_union&quot;</span>, </span>
+<span id="cb112-263"><a href="source-code-1.html#cb112-263" aria-hidden="true" tabindex="-1"></a>         <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">update =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-264"><a href="source-code-1.html#cb112-264" aria-hidden="true" tabindex="-1"></a><span class="co"># summarize == union</span></span>
+<span id="cb112-265"><a href="source-code-1.html#cb112-265" aria-hidden="true" tabindex="-1"></a>districts <span class="ot">&lt;-</span> nhood_pov <span class="sc">%&gt;%</span></span>
+<span id="cb112-266"><a href="source-code-1.html#cb112-266" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(neighdist) <span class="sc">%&gt;%</span></span>
+<span id="cb112-267"><a href="source-code-1.html#cb112-267" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb112-268"><a href="source-code-1.html#cb112-268" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">sum</span>(n), </span>
+<span id="cb112-269"><a href="source-code-1.html#cb112-269" aria-hidden="true" tabindex="-1"></a>        <span class="at">n_pov =</span> <span class="fu">sum</span>(n_pov),</span>
+<span id="cb112-270"><a href="source-code-1.html#cb112-270" aria-hidden="true" tabindex="-1"></a>        <span class="at">pct_pov =</span> <span class="fu">round</span>(<span class="fu">sum</span>(n_pov) <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb112-271"><a href="source-code-1.html#cb112-271" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-272"><a href="source-code-1.html#cb112-272" aria-hidden="true" tabindex="-1"></a><span class="co"># save</span></span>
+<span id="cb112-273"><a href="source-code-1.html#cb112-273" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> districts, <span class="at">dsn =</span> mygpkg, <span class="at">layer =</span> <span class="st">&quot;districts&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">update =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-274"><a href="source-code-1.html#cb112-274" aria-hidden="true" tabindex="-1"></a>pacman<span class="sc">::</span><span class="fu">p_load</span>(leaflet, mapview, htmltools, knitr)</span>
+<span id="cb112-275"><a href="source-code-1.html#cb112-275" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-276"><a href="source-code-1.html#cb112-276" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-277"><a href="source-code-1.html#cb112-277" aria-hidden="true" tabindex="-1"></a><span class="co"># path to this file name</span></span>
+<span id="cb112-278"><a href="source-code-1.html#cb112-278" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">interactive</span>()) {</span>
+<span id="cb112-279"><a href="source-code-1.html#cb112-279" aria-hidden="true" tabindex="-1"></a>    fnamepath <span class="ot">&lt;-</span> <span class="fu">current_input</span>(<span class="at">dir =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-280"><a href="source-code-1.html#cb112-280" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb112-281"><a href="source-code-1.html#cb112-281" aria-hidden="true" tabindex="-1"></a>    fnamepath <span class="ot">&lt;-</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb112-282"><a href="source-code-1.html#cb112-282" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb112-283"><a href="source-code-1.html#cb112-283" aria-hidden="true" tabindex="-1"></a><span class="fu">mapview</span>(nhood_pov, <span class="at">zcol =</span> <span class="st">&quot;pct_pov&quot;</span>, <span class="at">legend =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb112-284"><a href="source-code-1.html#cb112-284" aria-hidden="true" tabindex="-1"></a><span class="co"># CRS</span></span>
+<span id="cb112-285"><a href="source-code-1.html#cb112-285" aria-hidden="true" tabindex="-1"></a>nhood_pov_4326 <span class="ot">&lt;-</span> nhood_pov <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb112-286"><a href="source-code-1.html#cb112-286" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-287"><a href="source-code-1.html#cb112-287" aria-hidden="true" tabindex="-1"></a><span class="co"># make a label with the count of persons, persons below poverty, and % poverty</span></span>
+<span id="cb112-288"><a href="source-code-1.html#cb112-288" aria-hidden="true" tabindex="-1"></a>nhood_pov_4326<span class="sc">$</span>mylab <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">&quot;n_pov=%s&lt;br&gt;n=%s&lt;br&gt;%s&lt;br&gt;&quot;</span>, </span>
+<span id="cb112-289"><a href="source-code-1.html#cb112-289" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">round</span>(nhood_pov_4326<span class="sc">$</span>n_pov, <span class="dv">0</span>), </span>
+<span id="cb112-290"><a href="source-code-1.html#cb112-290" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">round</span>(nhood_pov_4326<span class="sc">$</span>n, <span class="dv">0</span>), </span>
+<span id="cb112-291"><a href="source-code-1.html#cb112-291" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">paste</span>(<span class="st">&quot;pov=&quot;</span>, nhood_pov_4326<span class="sc">$</span>pct_pov, <span class="st">&quot;%&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb112-292"><a href="source-code-1.html#cb112-292" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-293"><a href="source-code-1.html#cb112-293" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">leaflet</span>(<span class="at">data =</span> nhood_pov_4326) <span class="sc">%&gt;%</span></span>
+<span id="cb112-294"><a href="source-code-1.html#cb112-294" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addPolygons</span>(<span class="at">popup =</span> <span class="sc">~</span>mylab, <span class="at">weight =</span> <span class="dv">2</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-295"><a href="source-code-1.html#cb112-295" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addTiles</span>()</span>
+<span id="cb112-296"><a href="source-code-1.html#cb112-296" aria-hidden="true" tabindex="-1"></a>l</span>
+<span id="cb112-297"><a href="source-code-1.html#cb112-297" aria-hidden="true" tabindex="-1"></a><span class="co"># CRS</span></span>
+<span id="cb112-298"><a href="source-code-1.html#cb112-298" aria-hidden="true" tabindex="-1"></a>nhood_pov_4326 <span class="ot">&lt;-</span> nhood_pov <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb112-299"><a href="source-code-1.html#cb112-299" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-300"><a href="source-code-1.html#cb112-300" aria-hidden="true" tabindex="-1"></a>mypalette <span class="ot">&lt;-</span> <span class="fu">colorQuantile</span>(<span class="at">palette =</span> <span class="st">&quot;viridis&quot;</span>, <span class="at">domain =</span> nhood_pov_4326<span class="sc">$</span>pct_pov, <span class="at">n =</span> <span class="dv">4</span>)</span>
+<span id="cb112-301"><a href="source-code-1.html#cb112-301" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-302"><a href="source-code-1.html#cb112-302" aria-hidden="true" tabindex="-1"></a><span class="co"># make a label with the count of persons, persons below poverty, and % poverty</span></span>
+<span id="cb112-303"><a href="source-code-1.html#cb112-303" aria-hidden="true" tabindex="-1"></a>nhood_pov_4326<span class="sc">$</span>mylab <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">&quot;%s&lt;br&gt;%s&lt;br&gt;&quot;</span>, </span>
+<span id="cb112-304"><a href="source-code-1.html#cb112-304" aria-hidden="true" tabindex="-1"></a>                                nhood_pov_4326<span class="sc">$</span>gen_alias, </span>
+<span id="cb112-305"><a href="source-code-1.html#cb112-305" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">paste</span>(<span class="st">&quot;pov=&quot;</span>, nhood_pov_4326<span class="sc">$</span>pct_pov, <span class="st">&quot;%&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb112-306"><a href="source-code-1.html#cb112-306" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-307"><a href="source-code-1.html#cb112-307" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">leaflet</span>(<span class="at">data =</span> nhood_pov_4326) <span class="sc">%&gt;%</span></span>
+<span id="cb112-308"><a href="source-code-1.html#cb112-308" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addPolygons</span>(<span class="at">popup =</span> <span class="sc">~</span>mylab, </span>
+<span id="cb112-309"><a href="source-code-1.html#cb112-309" aria-hidden="true" tabindex="-1"></a>                <span class="at">weight =</span> <span class="dv">2</span>, </span>
+<span id="cb112-310"><a href="source-code-1.html#cb112-310" aria-hidden="true" tabindex="-1"></a>                <span class="at">fillColor =</span> <span class="sc">~</span><span class="fu">mypalette</span>(pct_pov),</span>
+<span id="cb112-311"><a href="source-code-1.html#cb112-311" aria-hidden="true" tabindex="-1"></a>                <span class="at">opacity =</span> <span class="fl">0.7</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-312"><a href="source-code-1.html#cb112-312" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb112-313"><a href="source-code-1.html#cb112-313" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addLegend</span>(<span class="at">pal=</span>mypalette, <span class="at">values=</span><span class="sc">~</span>pct_pov, <span class="at">opacity=</span><span class="fl">0.7</span>, <span class="at">title =</span> <span class="st">&quot;% below poverty&quot;</span>, <span class="at">position =</span> <span class="st">&quot;bottomleft&quot;</span> )</span>
+<span id="cb112-314"><a href="source-code-1.html#cb112-314" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-315"><a href="source-code-1.html#cb112-315" aria-hidden="true" tabindex="-1"></a>l</span>
+<span id="cb112-316"><a href="source-code-1.html#cb112-316" aria-hidden="true" tabindex="-1"></a><span class="co"># CRS</span></span>
+<span id="cb112-317"><a href="source-code-1.html#cb112-317" aria-hidden="true" tabindex="-1"></a>nhood_pov_4326 <span class="ot">&lt;-</span> nhood_pov <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb112-318"><a href="source-code-1.html#cb112-318" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-319"><a href="source-code-1.html#cb112-319" aria-hidden="true" tabindex="-1"></a><span class="co"># hospitals</span></span>
+<span id="cb112-320"><a href="source-code-1.html#cb112-320" aria-hidden="true" tabindex="-1"></a>hospitals <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="fu">file.path</span>(mydatadir, <span class="st">&quot;medical_facilities&quot;</span>, <span class="st">&quot;medical_facilities.shp&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">4326</span>)</span>
+<span id="cb112-321"><a href="source-code-1.html#cb112-321" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-322"><a href="source-code-1.html#cb112-322" aria-hidden="true" tabindex="-1"></a>mypalette <span class="ot">&lt;-</span> <span class="fu">colorQuantile</span>(<span class="at">palette =</span> <span class="st">&quot;viridis&quot;</span>, <span class="at">domain =</span> nhood_pov_4326<span class="sc">$</span>pct_pov, <span class="at">n =</span> <span class="dv">4</span>)</span>
+<span id="cb112-323"><a href="source-code-1.html#cb112-323" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-324"><a href="source-code-1.html#cb112-324" aria-hidden="true" tabindex="-1"></a><span class="co"># make a label with the count of persons, persons below poverty, and % poverty</span></span>
+<span id="cb112-325"><a href="source-code-1.html#cb112-325" aria-hidden="true" tabindex="-1"></a>nhood_pov_4326<span class="sc">$</span>mylab <span class="ot">&lt;-</span> <span class="fu">sprintf</span>(<span class="st">&quot;%s&lt;br&gt;%s&lt;br&gt;&quot;</span>, </span>
+<span id="cb112-326"><a href="source-code-1.html#cb112-326" aria-hidden="true" tabindex="-1"></a>                                nhood_pov_4326<span class="sc">$</span>gen_alias, </span>
+<span id="cb112-327"><a href="source-code-1.html#cb112-327" aria-hidden="true" tabindex="-1"></a>                                <span class="fu">paste</span>(<span class="st">&quot;pov=&quot;</span>, nhood_pov_4326<span class="sc">$</span>pct_pov, <span class="st">&quot;%&quot;</span>, <span class="at">sep=</span><span class="st">&quot;&quot;</span>))</span>
+<span id="cb112-328"><a href="source-code-1.html#cb112-328" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-329"><a href="source-code-1.html#cb112-329" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">leaflet</span>(<span class="at">data =</span> nhood_pov_4326) <span class="sc">%&gt;%</span></span>
+<span id="cb112-330"><a href="source-code-1.html#cb112-330" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addPolygons</span>(<span class="at">popup =</span> <span class="sc">~</span>mylab, </span>
+<span id="cb112-331"><a href="source-code-1.html#cb112-331" aria-hidden="true" tabindex="-1"></a>                <span class="at">weight =</span> <span class="dv">2</span>, </span>
+<span id="cb112-332"><a href="source-code-1.html#cb112-332" aria-hidden="true" tabindex="-1"></a>                <span class="at">fillColor =</span> <span class="sc">~</span><span class="fu">mypalette</span>(pct_pov),</span>
+<span id="cb112-333"><a href="source-code-1.html#cb112-333" aria-hidden="true" tabindex="-1"></a>                <span class="at">opacity =</span> <span class="fl">0.7</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb112-334"><a href="source-code-1.html#cb112-334" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addTiles</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb112-335"><a href="source-code-1.html#cb112-335" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addLegend</span>(<span class="at">pal=</span>mypalette, <span class="at">values=</span><span class="sc">~</span>pct_pov, <span class="at">opacity=</span><span class="fl">0.7</span>, <span class="at">title =</span> <span class="st">&quot;% below poverty&quot;</span>, <span class="at">position =</span> <span class="st">&quot;bottomleft&quot;</span> )</span>
+<span id="cb112-336"><a href="source-code-1.html#cb112-336" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-337"><a href="source-code-1.html#cb112-337" aria-hidden="true" tabindex="-1"></a>l <span class="ot">&lt;-</span> <span class="fu">addCircleMarkers</span>(<span class="at">map =</span> l, </span>
+<span id="cb112-338"><a href="source-code-1.html#cb112-338" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> hospitals,</span>
+<span id="cb112-339"><a href="source-code-1.html#cb112-339" aria-hidden="true" tabindex="-1"></a>                     <span class="at">radius =</span> <span class="dv">5</span>, </span>
+<span id="cb112-340"><a href="source-code-1.html#cb112-340" aria-hidden="true" tabindex="-1"></a>                     <span class="at">weight =</span> <span class="dv">1</span>,</span>
+<span id="cb112-341"><a href="source-code-1.html#cb112-341" aria-hidden="true" tabindex="-1"></a>                     <span class="at">opacity =</span> <span class="fl">0.9</span>,</span>
+<span id="cb112-342"><a href="source-code-1.html#cb112-342" aria-hidden="true" tabindex="-1"></a>                     <span class="at">fillOpacity =</span> <span class="fl">0.5</span>,</span>
+<span id="cb112-343"><a href="source-code-1.html#cb112-343" aria-hidden="true" tabindex="-1"></a>                     <span class="at">label =</span> <span class="sc">~</span>ABB_NAME)</span>
+<span id="cb112-344"><a href="source-code-1.html#cb112-344" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb112-345"><a href="source-code-1.html#cb112-345" aria-hidden="true" tabindex="-1"></a>l</span>
+<span id="cb112-346"><a href="source-code-1.html#cb112-346" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">readLines</span>(fnamepath), <span class="at">sep =</span> <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+</div>
+<div id="complete-rmd-code-1" class="section level2" number="8.2">
+<h2><span class="header-section-number">8.2</span> Complete Rmd code</h2>
+<div class="sourceCode" id="cb113"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb113-1"><a href="source-code-1.html#cb113-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">readLines</span>(fnamepath), <span class="at">sep =</span> <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span></code></pre></div>
+<pre><code>Warning in file(con, &quot;r&quot;): file(&quot;&quot;) only supports open = &quot;w+&quot; and open = &quot;w+b&quot;: using the former</code></pre>
+
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="leaflet.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/070-leaflet.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["gis-R.pdf", "gis-R.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

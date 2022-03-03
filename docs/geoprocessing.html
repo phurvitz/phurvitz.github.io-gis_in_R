@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>Chapter 6 Geoprocessing | Reproducible GIS analysis with R</title>
+  <meta name="description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  <meta name="generator" content="bookdown 0.24.4 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="Chapter 6 Geoprocessing | Reproducible GIS analysis with R" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  <meta name="github-repo" content="rstudio/bookdown-demo" />
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 6 Geoprocessing | Reproducible GIS analysis with R" />
+  
+  <meta name="twitter:description" content="Manual for CSDE Workshop ‘Reproducible GIS analysis with R’" />
+  
+
+<meta name="author" content="Phil Hurvitz" />
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="crs.html"/>
+<link rel="next" href="leaflet.html"/>
+<script src="libs/header-attrs-2.11/header-attrs.js"></script>
+<script src="libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/fuse.js@6.4.6/dist/fuse.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+<link href="libs/anchor-sections-1.0.1/anchor-sections.css" rel="stylesheet" />
+<script src="libs/anchor-sections-1.0.1/anchor-sections.js"></script>
+<script src="libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="libs/bsTable-3.3.7/bootstrapTable.min.css" rel="stylesheet" />
+<script src="libs/bsTable-3.3.7/bootstrapTable.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/leaflet-1.3.1/leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet" />
+<script src="libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet" />
+<script src="libs/leaflet-binding-2.0.4.1/leaflet.js"></script>
+<script src="libs/leaflet-providers-1.9.0/leaflet-providers_1.9.0.js"></script>
+<script src="libs/leaflet-providers-plugin-2.0.4.1/leaflet-providers-plugin.js"></script>
+<link href="libs/HomeButton-0.0.1/home-button.css" rel="stylesheet" />
+<script src="libs/HomeButton-0.0.1/home-button.js"></script>
+<script src="libs/HomeButton-0.0.1/easy-button-src.min.js"></script>
+<script src="libs/clipboard-0.0.1/setClipboardText.js"></script>
+<link href="libs/mapviewCSS-0.0.1/mapview-popup.css" rel="stylesheet" />
+<link href="libs/mapviewCSS-0.0.1/mapview.css" rel="stylesheet" />
+
+
+<style type="text/css">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">Reproducible GIS analysis with R</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="getting_started.html"><a href="getting_started.html"><i class="fa fa-check"></i><b>2</b> Getting started</a>
+<ul>
+<li class="chapter" data-level="2.1" data-path="getting_started.html"><a href="getting_started.html#install-necessary-packages"><i class="fa fa-check"></i><b>2.1</b> Install necessary packages</a></li>
+<li class="chapter" data-level="2.2" data-path="getting_started.html"><a href="getting_started.html#create-an-rstudio-project"><i class="fa fa-check"></i><b>2.2</b> Create an RStudio project</a></li>
+<li class="chapter" data-level="2.3" data-path="getting_started.html"><a href="getting_started.html#download-files"><i class="fa fa-check"></i><b>2.3</b> Download files</a></li>
+<li class="chapter" data-level="2.4" data-path="getting_started.html"><a href="getting_started.html#preview-data"><i class="fa fa-check"></i><b>2.4</b> Preview data</a></li>
+<li class="chapter" data-level="2.5" data-path="getting_started.html"><a href="getting_started.html#save-your-project"><i class="fa fa-check"></i><b>2.5</b> Save your project</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="representation.html"><a href="representation.html"><i class="fa fa-check"></i><b>3</b> Representation of spatial features</a>
+<ul>
+<li class="chapter" data-level="3.1" data-path="representation.html"><a href="representation.html#points"><i class="fa fa-check"></i><b>3.1</b> Points</a></li>
+<li class="chapter" data-level="3.2" data-path="representation.html"><a href="representation.html#linestrings"><i class="fa fa-check"></i><b>3.2</b> Linestrings</a></li>
+<li class="chapter" data-level="3.3" data-path="representation.html"><a href="representation.html#polygons"><i class="fa fa-check"></i><b>3.3</b> Polygons</a></li>
+<li class="chapter" data-level="3.4" data-path="representation.html"><a href="representation.html#conclusion"><i class="fa fa-check"></i><b>3.4</b> Conclusion</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="import-export.html"><a href="import-export.html"><i class="fa fa-check"></i><b>4</b> Importing and exporting spatial data sets</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="import-export.html"><a href="import-export.html#importing-spatial-data-sets"><i class="fa fa-check"></i><b>4.1</b> Importing spatial data sets</a></li>
+<li class="chapter" data-level="4.2" data-path="import-export.html"><a href="import-export.html#export"><i class="fa fa-check"></i><b>4.2</b> Exporting spatial data</a></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="crs.html"><a href="crs.html"><i class="fa fa-check"></i><b>5</b> Handling projections and coordinate systems</a>
+<ul>
+<li class="chapter" data-level="5.1" data-path="crs.html"><a href="crs.html#projections-and-coordinate-systems"><i class="fa fa-check"></i><b>5.1</b> Projections and coordinate systems</a></li>
+<li class="chapter" data-level="5.2" data-path="crs.html"><a href="crs.html#on-the-fly-projection-in-desktop-gis"><i class="fa fa-check"></i><b>5.2</b> On-the-fly projection in desktop GIS</a></li>
+<li class="chapter" data-level="5.3" data-path="crs.html"><a href="crs.html#defining-a-data-sets-coordinate-reference-system"><i class="fa fa-check"></i><b>5.3</b> Defining a data set’s coordinate reference system</a></li>
+<li class="chapter" data-level="5.4" data-path="crs.html"><a href="crs.html#coordinate-transformation"><i class="fa fa-check"></i><b>5.4</b> Coordinate transformation</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="geoprocessing.html"><a href="geoprocessing.html"><i class="fa fa-check"></i><b>6</b> Geoprocessing</a>
+<ul>
+<li class="chapter" data-level="6.1" data-path="geoprocessing.html"><a href="geoprocessing.html#buffering"><i class="fa fa-check"></i><b>6.1</b> Buffering</a></li>
+<li class="chapter" data-level="6.2" data-path="geoprocessing.html"><a href="geoprocessing.html#point-in-polygon"><i class="fa fa-check"></i><b>6.2</b> Point-in-polygon</a></li>
+<li class="chapter" data-level="6.3" data-path="geoprocessing.html"><a href="geoprocessing.html#polygon-on-polygon"><i class="fa fa-check"></i><b>6.3</b> Polygon-on-polygon</a>
+<ul>
+<li class="chapter" data-level="6.3.1" data-path="geoprocessing.html"><a href="geoprocessing.html#intersect"><i class="fa fa-check"></i><b>6.3.1</b> Intersect</a></li>
+<li class="chapter" data-level="6.3.2" data-path="geoprocessing.html"><a href="geoprocessing.html#union"><i class="fa fa-check"></i><b>6.3.2</b> Union</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="leaflet.html"><a href="leaflet.html"><i class="fa fa-check"></i><b>7</b> <code>leaflet</code> and <code>mapview</code> maps</a></li>
+<li class="chapter" data-level="8" data-path="source-code.html"><a href="source-code.html"><i class="fa fa-check"></i><b>8</b> Source code</a>
+<ul>
+<li class="chapter" data-level="8.1" data-path="source-code.html"><a href="source-code.html#r-code-used-in-this-document"><i class="fa fa-check"></i><b>8.1</b> R code used in this document</a></li>
+<li class="chapter" data-level="8.2" data-path="source-code.html"><a href="source-code.html#complete-rmd-code"><i class="fa fa-check"></i><b>8.2</b> Complete Rmd code</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">Reproducible GIS analysis with R</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="geoprocessing" class="section level1" number="6">
+<h1><span class="header-section-number">Chapter 6</span> Geoprocessing</h1>
+<p>Make sure that <code>mydatadir</code> points to the location where the GIS data files were downloaded and unzipped.</p>
+<div class="sourceCode" id="cb58"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb58-1"><a href="geoprocessing.html#cb58-1" aria-hidden="true" tabindex="-1"></a>mydatadir <span class="ot">&lt;-</span> <span class="st">&quot;H:/gis_in_r/data&quot;</span></span></code></pre></div>
+<div id="buffering" class="section level2" number="6.1">
+<h2><span class="header-section-number">6.1</span> Buffering</h2>
+<p>Buffering is one of the most common geoprocessing techniques. <code>sf</code> provides the <code>st_buffer()</code> command to create Euclidean buffers around vector features.</p>
+<p>Let’s create 1 km buffers around the points we created earlier. For this process, first we transform the points to UTM 10 so when we specify a buffer distance of 1,000 that translates to 1 km, and finally we transform to WA State Plane N.</p>
+<div class="sourceCode" id="cb59"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb59-1"><a href="geoprocessing.html#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="co"># create the points</span></span>
+<span id="cb59-2"><a href="geoprocessing.html#cb59-2" aria-hidden="true" tabindex="-1"></a>snxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Space Needle&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3493</span>, <span class="at">y =</span> <span class="fl">47.6205</span>)</span>
+<span id="cb59-3"><a href="geoprocessing.html#cb59-3" aria-hidden="true" tabindex="-1"></a>space_needle <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(snxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb59-4"><a href="geoprocessing.html#cb59-4" aria-hidden="true" tabindex="-1"></a>shxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Savery Hall&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3083</span>, <span class="at">y =</span> <span class="fl">47.6572</span>)</span>
+<span id="cb59-5"><a href="geoprocessing.html#cb59-5" aria-hidden="true" tabindex="-1"></a>savery_hall <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(shxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb59-6"><a href="geoprocessing.html#cb59-6" aria-hidden="true" tabindex="-1"></a>zooxy <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">name =</span> <span class="st">&quot;Woodland Park Zoo&quot;</span>, <span class="at">x =</span> <span class="sc">-</span><span class="fl">122.3543</span>, <span class="at">y =</span> <span class="fl">47.6685</span>)</span>
+<span id="cb59-7"><a href="geoprocessing.html#cb59-7" aria-hidden="true" tabindex="-1"></a>wp_zoo <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(zooxy, <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;y&quot;</span>), <span class="at">crs =</span> <span class="dv">4326</span>)</span>
+<span id="cb59-8"><a href="geoprocessing.html#cb59-8" aria-hidden="true" tabindex="-1"></a>pts <span class="ot">&lt;-</span> <span class="fu">rbind</span>(space_needle, savery_hall, wp_zoo)</span>
+<span id="cb59-9"><a href="geoprocessing.html#cb59-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-10"><a href="geoprocessing.html#cb59-10" aria-hidden="true" tabindex="-1"></a><span class="co"># make the buffer with inline transforms</span></span>
+<span id="cb59-11"><a href="geoprocessing.html#cb59-11" aria-hidden="true" tabindex="-1"></a>pts_buf_1km <span class="ot">&lt;-</span> pts <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">26910</span>) <span class="sc">%&gt;%</span> <span class="fu">st_buffer</span>(<span class="at">dist =</span> <span class="dv">1000</span>) <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">2926</span>)</span></code></pre></div>
+<p>Export the point buffers to our GPKG:</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb60-1"><a href="geoprocessing.html#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># write to the GPKG</span></span>
+<span id="cb60-2"><a href="geoprocessing.html#cb60-2" aria-hidden="true" tabindex="-1"></a>mygpkg <span class="ot">&lt;-</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>)</span>
+<span id="cb60-3"><a href="geoprocessing.html#cb60-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> pts_buf_1km,</span>
+<span id="cb60-4"><a href="geoprocessing.html#cb60-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> mygpkg,</span>
+<span id="cb60-5"><a href="geoprocessing.html#cb60-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;pts_buf_1km&quot;</span>,</span>
+<span id="cb60-6"><a href="geoprocessing.html#cb60-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">quiet =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb60-7"><a href="geoprocessing.html#cb60-7" aria-hidden="true" tabindex="-1"></a>         <span class="at">append =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb60-8"><a href="geoprocessing.html#cb60-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<p>We will also make 500 ft buffers around the freeways of King County and export them to the GPKG</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb61-1"><a href="geoprocessing.html#cb61-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span> <span class="fu">exists</span>(<span class="st">&quot;kctrans&quot;</span>)){</span>
+<span id="cb61-2"><a href="geoprocessing.html#cb61-2" aria-hidden="true" tabindex="-1"></a>    kctrans <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
+<span id="cb61-3"><a href="geoprocessing.html#cb61-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;Metro_Transportation_Network_TNET_in_King_County__trans_network_line.shp&quot;</span>),</span>
+<span id="cb61-4"><a href="geoprocessing.html#cb61-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">quiet =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb61-5"><a href="geoprocessing.html#cb61-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb61-6"><a href="geoprocessing.html#cb61-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-7"><a href="geoprocessing.html#cb61-7" aria-hidden="true" tabindex="-1"></a><span class="co"># freeways are KC_FCC_ID = F</span></span>
+<span id="cb61-8"><a href="geoprocessing.html#cb61-8" aria-hidden="true" tabindex="-1"></a>kcfwy <span class="ot">&lt;-</span> kctrans <span class="sc">%&gt;%</span> <span class="fu">filter</span>(KC_FCC_ID <span class="sc">==</span> <span class="st">&quot;F&quot;</span>)</span>
+<span id="cb61-9"><a href="geoprocessing.html#cb61-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-10"><a href="geoprocessing.html#cb61-10" aria-hidden="true" tabindex="-1"></a><span class="co"># buffer</span></span>
+<span id="cb61-11"><a href="geoprocessing.html#cb61-11" aria-hidden="true" tabindex="-1"></a>kcfwy_buf_500ft <span class="ot">&lt;-</span> kcfwy <span class="sc">%&gt;%</span> <span class="fu">st_transform</span>(<span class="dv">2926</span>) <span class="sc">%&gt;%</span> <span class="fu">st_buffer</span>(<span class="dv">500</span>)</span>
+<span id="cb61-12"><a href="geoprocessing.html#cb61-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb61-13"><a href="geoprocessing.html#cb61-13" aria-hidden="true" tabindex="-1"></a><span class="co"># write to the GPKG</span></span>
+<span id="cb61-14"><a href="geoprocessing.html#cb61-14" aria-hidden="true" tabindex="-1"></a>mygpkg <span class="ot">&lt;-</span> <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;r_gis.gpkg&quot;</span>)</span>
+<span id="cb61-15"><a href="geoprocessing.html#cb61-15" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> kcfwy_buf_500ft, <span class="at">dsn =</span> mygpkg, <span class="at">layer =</span> <span class="st">&quot;kcfwy_buf_500ft&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">update =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Warning: &#39;update&#39; is deprecated.
+## Use &#39;append&#39; instead.
+## See help(&quot;Deprecated&quot;)</code></pre>
+<p>What the !#*$&amp;? Why are there all those little tiny buffers around the freeway lines? To be addressed below….</p>
+<p><img src="images/2020-02-11_16_25_12-_esda_20200212a%20-%20QGIS.png" /></p>
+</div>
+<div id="point-in-polygon" class="section level2" number="6.2">
+<h2><span class="header-section-number">6.2</span> Point-in-polygon</h2>
+<p>For the next analysis, we will <a href="https://csde.washington.edu/workshop/introduction-to-gis/">tabulate the density of transit stops in each census block group</a> and then look for patterns in transit stop density by median household income.</p>
+<p>First we need to get the census block groups and median family income using <code>tidycensus</code>. Covering the use of <code>tidycensus</code> is beyond the scope of this workshop; for an introduction, see the <a href="https://csde-uw.github.io/tidycensus-tutorial/">Computational Demography seminar presented by Connor Gilroy and Neal Marquez</a>.</p>
+<p>Using pipes in <code>magrittr</code>, we perform an inline CRS transformation to WA State Plane N and also calculate the area of each bloc group (which we will need for the density measurement later).</p>
+<p>If you did not get your census API key, you will need to load the layer from the <a href="http://staff.washington.edu/phurvitz/r_gis/data/census.gpkg.zip"><code>census.gpkg</code></a> file:</p>
+<pre><code>acs5_2018_bg &lt;- st_read(dsn = file.path(mydatadir, &quot;census.gpkg&quot;), layer = &quot;acs5_2018_bg&quot;, quiet = TRUE)
+st_crs(acs5_2018_bg) &lt;- 2926</code></pre>
+<div class="sourceCode" id="cb64"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb64-1"><a href="geoprocessing.html#cb64-1" aria-hidden="true" tabindex="-1"></a><span class="co"># cache data</span></span>
+<span id="cb64-2"><a href="geoprocessing.html#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">tigris_use_cache =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb64-3"><a href="geoprocessing.html#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="co"># where to store data</span></span>
+<span id="cb64-4"><a href="geoprocessing.html#cb64-4" aria-hidden="true" tabindex="-1"></a>tigris_cache_dir <span class="ot">&lt;-</span> mydatadir</span>
+<span id="cb64-5"><a href="geoprocessing.html#cb64-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb64-6"><a href="geoprocessing.html#cb64-6" aria-hidden="true" tabindex="-1"></a><span class="co"># if you have your API key, enter it here rather than using the system environment variable</span></span>
+<span id="cb64-7"><a href="geoprocessing.html#cb64-7" aria-hidden="true" tabindex="-1"></a><span class="co"># myapikey &lt;- &quot;foobar&quot;</span></span>
+<span id="cb64-8"><a href="geoprocessing.html#cb64-8" aria-hidden="true" tabindex="-1"></a>myapikey <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">&quot;CENSUS_API_KEY&quot;</span>)</span>
+<span id="cb64-9"><a href="geoprocessing.html#cb64-9" aria-hidden="true" tabindex="-1"></a><span class="fu">census_api_key</span>(myapikey)</span></code></pre></div>
+<pre><code>## To install your API key for use in future sessions, run this function with `install = TRUE`.</code></pre>
+<div class="sourceCode" id="cb66"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb66-1"><a href="geoprocessing.html#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the data and project it to match the bus stops, also calculate the area</span></span>
+<span id="cb66-2"><a href="geoprocessing.html#cb66-2" aria-hidden="true" tabindex="-1"></a>acs5_2018_bg <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb66-3"><a href="geoprocessing.html#cb66-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">&quot;block group&quot;</span>,</span>
+<span id="cb66-4"><a href="geoprocessing.html#cb66-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">medfamincome=</span><span class="st">&quot;B19113_001&quot;</span>),</span>
+<span id="cb66-5"><a href="geoprocessing.html#cb66-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">state =</span> <span class="st">&quot;WA&quot;</span>,</span>
+<span id="cb66-6"><a href="geoprocessing.html#cb66-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">county =</span> <span class="st">&quot;King&quot;</span>,</span>
+<span id="cb66-7"><a href="geoprocessing.html#cb66-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb66-8"><a href="geoprocessing.html#cb66-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">moe =</span> <span class="dv">95</span>,</span>
+<span id="cb66-9"><a href="geoprocessing.html#cb66-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">cache_table =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb66-10"><a href="geoprocessing.html#cb66-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">output =</span> <span class="st">&quot;wide&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb66-11"><a href="geoprocessing.html#cb66-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">2926</span>)  <span class="sc">%&gt;%</span></span>
+<span id="cb66-12"><a href="geoprocessing.html#cb66-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">area_ft =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)))</span></code></pre></div>
+<pre><code>## Getting data from the 2015-2019 5-year ACS</code></pre>
+<pre><code>## Using FIPS code &#39;53&#39; for state &#39;WA&#39;</code></pre>
+<pre><code>## Using FIPS code &#39;033&#39; for &#39;King County&#39;</code></pre>
+<div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb70-1"><a href="geoprocessing.html#cb70-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(acs5_2018_bg) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(acs5_2018_bg))</span></code></pre></div>
+<p>Quickly view the data in a <code>ggplot()</code>:</p>
+<div class="sourceCode" id="cb71"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb71-1"><a href="geoprocessing.html#cb71-1" aria-hidden="true" tabindex="-1"></a>acs5_2018_bg <span class="sc">%&gt;%</span></span>
+<span id="cb71-2"><a href="geoprocessing.html#cb71-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb71-3"><a href="geoprocessing.html#cb71-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> medfamincomee), <span class="at">size =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
+<span id="cb71-4"><a href="geoprocessing.html#cb71-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span> </span>
+<span id="cb71-5"><a href="geoprocessing.html#cb71-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span></code></pre></div>
+<p><img src="gis-R_files/figure-html/ggplot1-1.png" width="672" /></p>
+<p>Load the bus stops:</p>
+<div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb72-1"><a href="geoprocessing.html#cb72-1" aria-hidden="true" tabindex="-1"></a>busstop <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
+<span id="cb72-2"><a href="geoprocessing.html#cb72-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;busstop/busstop.shp&quot;</span>), <span class="at">quiet =</span> <span class="cn">TRUE</span>) </span>
+<span id="cb72-3"><a href="geoprocessing.html#cb72-3" aria-hidden="true" tabindex="-1"></a><span class="fu">st_crs</span>(busstop) <span class="ot">&lt;-</span> <span class="dv">2926</span></span></code></pre></div>
+<pre><code>## Warning: st_crs&lt;- : replacing crs does not reproject data; use st_transform for that</code></pre>
+<div class="sourceCode" id="cb74"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb74-1"><a href="geoprocessing.html#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(busstop) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(busstop))</span></code></pre></div>
+<p>First, let’s look at the column names in <code>busstop</code>:</p>
+<div class="sourceCode" id="cb75"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb75-1"><a href="geoprocessing.html#cb75-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">colnames</span>(busstop))</span></code></pre></div>
+<pre><code>##  [1] &quot;objectid&quot;   &quot;busstop_id&quot; &quot;zonekey&quot;    &quot;begin_date&quot; &quot;end_date&quot;   &quot;tlink_id&quot;   &quot;ramkey&quot;     &quot;access_lvl&quot;
+##  [9] &quot;landing_pd&quot; &quot;trnsfr_pt&quot;  &quot;authority&quot;  &quot;awning&quot;     &quot;bearing_cd&quot; &quot;curb&quot;       &quot;curb_ht&quot;    &quot;bay&quot;       
+## [17] &quot;bike_rack&quot;  &quot;created_by&quot; &quot;cross_stre&quot; &quot;curb_paint&quot; &quot;dt_created&quot; &quot;dt_mapped&quot;  &quot;dt_mod&quot;     &quot;displacemt&quot;
+## [25] &quot;rampositio&quot; &quot;ditch&quot;      &quot;ext_surfc&quot;  &quot;ext_width&quot;  &quot;frm_cross&quot;  &quot;frm_intrst&quot; &quot;juris&quot;      &quot;reg_fare&quot;  
+## [33] &quot;rfp_dist&quot;   &quot;zip_code&quot;   &quot;i_sgn_anch&quot; &quot;i_sgn&quot;      &quot;int_loc&quot;    &quot;link_len&quot;   &quot;pcnt_from&quot;  &quot;t_nd_from&quot; 
+## [41] &quot;mod_by&quot;     &quot;news_box&quot;   &quot;non_mt_sgn&quot; &quot;bollards&quot;   &quot;num_shelt&quot;  &quot;on_street&quot;  &quot;othr_cov_a&quot; &quot;owner&quot;     
+## [49] &quot;paint_len&quot;  &quot;pk_stp_sur&quot; &quot;pullout&quot;    &quot;ret_wall&quot;   &quot;rfa_flag&quot;   &quot;rt_sgn_tp&quot;  &quot;sched_hold&quot; &quot;shdr_surf&quot; 
+## [57] &quot;shdr_width&quot; &quot;side&quot;       &quot;side_cross&quot; &quot;side_on&quot;    &quot;swlk_width&quot; &quot;sgn_mt_dir&quot; &quot;sgn_pst_an&quot; &quot;sgn_pst_tp&quot;
+## [65] &quot;spc_sgn_tp&quot; &quot;length&quot;     &quot;status&quot;     &quot;stop_type&quot;  &quot;address&quot;    &quot;add_commnt&quot; &quot;strp_width&quot; &quot;t_signal&quot;  
+## [73] &quot;wlk_surf&quot;   &quot;xcoord&quot;     &quot;ycoord&quot;     &quot;xcoord_off&quot; &quot;ycoord_off&quot; &quot;geometry&quot;</code></pre>
+<p>To get the census data as an attribute on each transit stop, use <code>st_join()</code>:</p>
+<div class="sourceCode" id="cb77"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb77-1"><a href="geoprocessing.html#cb77-1" aria-hidden="true" tabindex="-1"></a>busstop <span class="ot">&lt;-</span> busstop <span class="sc">%&gt;%</span> <span class="fu">st_join</span>(acs5_2018_bg)</span></code></pre></div>
+<p>We now see that there are additional variables, particularly <code>medfamincomee</code>:</p>
+<div class="sourceCode" id="cb78"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb78-1"><a href="geoprocessing.html#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">colnames</span>(busstop))</span></code></pre></div>
+<pre><code>##  [1] &quot;objectid&quot;      &quot;busstop_id&quot;    &quot;zonekey&quot;       &quot;begin_date&quot;    &quot;end_date&quot;      &quot;tlink_id&quot;     
+##  [7] &quot;ramkey&quot;        &quot;access_lvl&quot;    &quot;landing_pd&quot;    &quot;trnsfr_pt&quot;     &quot;authority&quot;     &quot;awning&quot;       
+## [13] &quot;bearing_cd&quot;    &quot;curb&quot;          &quot;curb_ht&quot;       &quot;bay&quot;           &quot;bike_rack&quot;     &quot;created_by&quot;   
+## [19] &quot;cross_stre&quot;    &quot;curb_paint&quot;    &quot;dt_created&quot;    &quot;dt_mapped&quot;     &quot;dt_mod&quot;        &quot;displacemt&quot;   
+## [25] &quot;rampositio&quot;    &quot;ditch&quot;         &quot;ext_surfc&quot;     &quot;ext_width&quot;     &quot;frm_cross&quot;     &quot;frm_intrst&quot;   
+## [31] &quot;juris&quot;         &quot;reg_fare&quot;      &quot;rfp_dist&quot;      &quot;zip_code&quot;      &quot;i_sgn_anch&quot;    &quot;i_sgn&quot;        
+## [37] &quot;int_loc&quot;       &quot;link_len&quot;      &quot;pcnt_from&quot;     &quot;t_nd_from&quot;     &quot;mod_by&quot;        &quot;news_box&quot;     
+## [43] &quot;non_mt_sgn&quot;    &quot;bollards&quot;      &quot;num_shelt&quot;     &quot;on_street&quot;     &quot;othr_cov_a&quot;    &quot;owner&quot;        
+## [49] &quot;paint_len&quot;     &quot;pk_stp_sur&quot;    &quot;pullout&quot;       &quot;ret_wall&quot;      &quot;rfa_flag&quot;      &quot;rt_sgn_tp&quot;    
+## [55] &quot;sched_hold&quot;    &quot;shdr_surf&quot;     &quot;shdr_width&quot;    &quot;side&quot;          &quot;side_cross&quot;    &quot;side_on&quot;      
+## [61] &quot;swlk_width&quot;    &quot;sgn_mt_dir&quot;    &quot;sgn_pst_an&quot;    &quot;sgn_pst_tp&quot;    &quot;spc_sgn_tp&quot;    &quot;length&quot;       
+## [67] &quot;status&quot;        &quot;stop_type&quot;     &quot;address&quot;       &quot;add_commnt&quot;    &quot;strp_width&quot;    &quot;t_signal&quot;     
+## [73] &quot;wlk_surf&quot;      &quot;xcoord&quot;        &quot;ycoord&quot;        &quot;xcoord_off&quot;    &quot;ycoord_off&quot;    &quot;geoid&quot;        
+## [79] &quot;name&quot;          &quot;medfamincomee&quot; &quot;medfamincomem&quot; &quot;area_ft&quot;       &quot;geometry&quot;</code></pre>
+<p>To calculate density we need a total count of transit stops by census unit id (<code>GEOID</code>) as well as the area. Note because all variables are identical within each census units, we can use <code>medfamincomee = min(medfamincomee)</code> in the summarize function.</p>
+<div class="sourceCode" id="cb80"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb80-1"><a href="geoprocessing.html#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="co"># tabulate the count of transit stops</span></span>
+<span id="cb80-2"><a href="geoprocessing.html#cb80-2" aria-hidden="true" tabindex="-1"></a>nbusstop <span class="ot">&lt;-</span> busstop <span class="sc">%&gt;%</span> </span>
+<span id="cb80-3"><a href="geoprocessing.html#cb80-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(geoid) <span class="sc">%&gt;%</span> </span>
+<span id="cb80-4"><a href="geoprocessing.html#cb80-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="at">n_busstop =</span> <span class="fu">n</span>(), </span>
+<span id="cb80-5"><a href="geoprocessing.html#cb80-5" aria-hidden="true" tabindex="-1"></a>              <span class="at">density_ha =</span> <span class="fu">n</span>() <span class="sc">/</span> <span class="fu">min</span>(area_ft) <span class="sc">*</span> <span class="dv">107639</span> , </span>
+<span id="cb80-6"><a href="geoprocessing.html#cb80-6" aria-hidden="true" tabindex="-1"></a>              <span class="at">medfamincomee =</span> <span class="fu">min</span>(medfamincomee))</span></code></pre></div>
+<p>Let’s make a scatter plot with a regression line and error.</p>
+<div class="sourceCode" id="cb81"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb81-1"><a href="geoprocessing.html#cb81-1" aria-hidden="true" tabindex="-1"></a>nbusstop <span class="sc">%&gt;%</span> <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> medfamincomee, <span class="at">y =</span> density_ha)) <span class="sc">+</span> </span>
+<span id="cb81-2"><a href="geoprocessing.html#cb81-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_point</span>() <span class="sc">+</span> </span>
+<span id="cb81-3"><a href="geoprocessing.html#cb81-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="sc">+</span></span>
+<span id="cb81-4"><a href="geoprocessing.html#cb81-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;block group median family income, ACS-5, 2018&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;transit stop density per ha&quot;</span>)</span></code></pre></div>
+<pre><code>## `geom_smooth()` using formula &#39;y ~ x&#39;</code></pre>
+<pre><code>## Warning: Removed 78 rows containing non-finite values (stat_smooth).</code></pre>
+<pre><code>## Warning: Removed 78 rows containing missing values (geom_point).</code></pre>
+<p><img src="gis-R_files/figure-html/scatterplot-1.png" width="672" /></p>
+<p>Looks like no relationship exists. How about some formal statistics?</p>
+<div class="sourceCode" id="cb85"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb85-1"><a href="geoprocessing.html#cb85-1" aria-hidden="true" tabindex="-1"></a><span class="fu">pander</span>(</span>
+<span id="cb85-2"><a href="geoprocessing.html#cb85-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summary</span>(</span>
+<span id="cb85-3"><a href="geoprocessing.html#cb85-3" aria-hidden="true" tabindex="-1"></a>        <span class="fu">lm</span>(<span class="at">data =</span> nbusstop, medfamincomee <span class="sc">~</span> density_ha)))</span></code></pre></div>
+<table style="width:88%;">
+<colgroup>
+<col width="25%" />
+<col width="15%" />
+<col width="18%" />
+<col width="13%" />
+<col width="15%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center"> </th>
+<th align="center">Estimate</th>
+<th align="center">Std. Error</th>
+<th align="center">t value</th>
+<th align="center">Pr(&gt;|t|)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center"><strong>(Intercept)</strong></td>
+<td align="center">126067</td>
+<td align="center">2017</td>
+<td align="center">62.51</td>
+<td align="center">0</td>
+</tr>
+<tr class="even">
+<td align="center"><strong>density_ha</strong></td>
+<td align="center">4414</td>
+<td align="center">11473</td>
+<td align="center">0.3848</td>
+<td align="center">0.7005</td>
+</tr>
+</tbody>
+</table>
+<table style="width:90%;">
+<caption>Fitting linear model: medfamincomee ~ density_ha</caption>
+<colgroup>
+<col width="20%" />
+<col width="30%" />
+<col width="15%" />
+<col width="23%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="center">Observations</th>
+<th align="center">Residual Std. Error</th>
+<th align="center"><span class="math inline">\(R^2\)</span></th>
+<th align="center">Adjusted <span class="math inline">\(R^2\)</span></th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="center">1186</td>
+<td align="center">51827</td>
+<td align="center">0.000125</td>
+<td align="center">-0.0007195</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div id="polygon-on-polygon" class="section level2" number="6.3">
+<h2><span class="header-section-number">6.3</span> Polygon-on-polygon</h2>
+<div id="intersect" class="section level3" number="6.3.1">
+<h3><span class="header-section-number">6.3.1</span> Intersect</h3>
+<p>For the next exercise we will estimate the proportion of persons living below the federal poverty level within Seattle neighborhoods using 2018 ACS data at the tract level (poverty data are not available at the block group level).</p>
+<p>First we will load the city neighborhood boundaries, including a CRS transformation to WA State Plane N:</p>
+<div class="sourceCode" id="cb86"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb86-1"><a href="geoprocessing.html#cb86-1" aria-hidden="true" tabindex="-1"></a>nhood <span class="ot">&lt;-</span> <span class="fu">st_read</span>(</span>
+<span id="cb86-2"><a href="geoprocessing.html#cb86-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">file.path</span>(mydatadir, <span class="st">&quot;Community_Reporting_Areas.shp&quot;</span>), </span>
+<span id="cb86-3"><a href="geoprocessing.html#cb86-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">quiet =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb86-4"><a href="geoprocessing.html#cb86-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">2926</span>)</span>
+<span id="cb86-5"><a href="geoprocessing.html#cb86-5" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(nhood) <span class="ot">=</span> <span class="fu">tolower</span>(<span class="fu">names</span>(nhood))</span></code></pre></div>
+<p>Get the tract data for the total count of persons for whom poverty status was determined and the count of persons living below the poverty level, also transforming to WA State Plane N and calculating the area of the tract.</p>
+<p>If you did not get your census API key, you will need to load the layer from the <a href="http://staff.washington.edu/phurvitz/r_gis/data/census.gpkg.zip"><code>census.gpkg</code></a> file:</p>
+<pre><code>acs5_2018_trt &lt;- st_read(dsn = file.path(mydatadir, &quot;census.gpkg&quot;), layer = &quot;acs5_2018_trt&quot;, quiet = TRUE)
+st_crs(acs5_2018_trt) &lt;- 2926</code></pre>
+<div class="sourceCode" id="cb88"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb88-1"><a href="geoprocessing.html#cb88-1" aria-hidden="true" tabindex="-1"></a><span class="co"># get the data and project it to match the bus stops, also calculate the area</span></span>
+<span id="cb88-2"><a href="geoprocessing.html#cb88-2" aria-hidden="true" tabindex="-1"></a>acs5_2018_trt <span class="ot">&lt;-</span> <span class="fu">get_acs</span>(</span>
+<span id="cb88-3"><a href="geoprocessing.html#cb88-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="dv">2018</span>,</span>
+<span id="cb88-4"><a href="geoprocessing.html#cb88-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">geography =</span> <span class="st">&quot;tract&quot;</span>,</span>
+<span id="cb88-5"><a href="geoprocessing.html#cb88-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">variables =</span> <span class="fu">c</span>(<span class="at">n=</span><span class="st">&quot;B06012_001&quot;</span>, <span class="at">n_pov=</span><span class="st">&quot;B06012_002&quot;</span>),</span>
+<span id="cb88-6"><a href="geoprocessing.html#cb88-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">state =</span> <span class="st">&quot;WA&quot;</span>,</span>
+<span id="cb88-7"><a href="geoprocessing.html#cb88-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">county =</span> <span class="st">&quot;King&quot;</span>,</span>
+<span id="cb88-8"><a href="geoprocessing.html#cb88-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">geometry =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb88-9"><a href="geoprocessing.html#cb88-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">moe =</span> <span class="dv">95</span>,</span>
+<span id="cb88-10"><a href="geoprocessing.html#cb88-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">cache_table =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb88-11"><a href="geoprocessing.html#cb88-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">output =</span> <span class="st">&quot;wide&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb88-12"><a href="geoprocessing.html#cb88-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">st_transform</span>(<span class="dv">2926</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb88-13"><a href="geoprocessing.html#cb88-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">area_ft_tract =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)))</span>
+<span id="cb88-14"><a href="geoprocessing.html#cb88-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb88-15"><a href="geoprocessing.html#cb88-15" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(acs5_2018_trt) <span class="ot">&lt;-</span> <span class="fu">tolower</span>(<span class="fu">colnames</span>(acs5_2018_trt))</span></code></pre></div>
+<p>Intersecting the tracts and neighborhoods will produce a polygon data set with data only for the area in common between both data sets. It will also subdivide polygons wherever there is an overlap between polygons from the different input layers. We also calculate the area of the resultant polygons (“slivers”) for estimating person counts within each sliver using area weighting under the (arguably incorrect) assumption that the population is uniformly distributed across the tract. The estimate of the count of persons within each sliver is calculated as</p>
+<p><span class="math display">\[pop_{sliver} = pop_{tract} \times \frac{area_{sliver}}{area_{original}}\]</span></p>
+<div class="sourceCode" id="cb89"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb89-1"><a href="geoprocessing.html#cb89-1" aria-hidden="true" tabindex="-1"></a>nhood_trt <span class="ot">&lt;-</span> <span class="fu">st_intersection</span>(<span class="at">x =</span> nhood, acs5_2018_trt) <span class="sc">%&gt;%</span> </span>
+<span id="cb89-2"><a href="geoprocessing.html#cb89-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(<span class="at">area_ft_intersect =</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)),</span>
+<span id="cb89-3"><a href="geoprocessing.html#cb89-3" aria-hidden="true" tabindex="-1"></a>           <span class="at">n_est =</span> ne <span class="sc">*</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)) <span class="sc">/</span> area_ft_tract, </span>
+<span id="cb89-4"><a href="geoprocessing.html#cb89-4" aria-hidden="true" tabindex="-1"></a>           <span class="at">n_est_pov =</span> n_pove <span class="sc">*</span> <span class="fu">as.numeric</span>(<span class="fu">st_area</span>(.)) <span class="sc">/</span> area_ft_tract)</span></code></pre></div>
+<pre><code>## Warning: attribute variables are assumed to be spatially constant throughout all geometries</code></pre>
+<p>We then sum the area-weighted counts for each neighborhood:</p>
+<p><span class="math display">\[\sum_{i=1}^{n} pop_{sliver}\]</span></p>
+<p>where <span class="math inline">\(i\)</span> is the sliver, <span class="math inline">\(n\)</span> is the count of slivers, and <span class="math inline">\(pop_{sliver}\)</span> is the estimated population of the sliver.</p>
+<p>This aggregation to the neighborhood level using the estimated counts of the number of persons and the number of persons living below poverty is done with <code>group_by()</code> and <code>summarize()</code></p>
+<div class="sourceCode" id="cb91"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb91-1"><a href="geoprocessing.html#cb91-1" aria-hidden="true" tabindex="-1"></a>nhood_pov <span class="ot">&lt;-</span> nhood_trt <span class="sc">%&gt;%</span> </span>
+<span id="cb91-2"><a href="geoprocessing.html#cb91-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(gen_alias) <span class="sc">%&gt;%</span> </span>
+<span id="cb91-3"><a href="geoprocessing.html#cb91-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarize</span>(</span>
+<span id="cb91-4"><a href="geoprocessing.html#cb91-4" aria-hidden="true" tabindex="-1"></a>        <span class="at">neighdist =</span> <span class="fu">first</span>(neighdist),</span>
+<span id="cb91-5"><a href="geoprocessing.html#cb91-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">sum</span>(n_est), </span>
+<span id="cb91-6"><a href="geoprocessing.html#cb91-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">n_pov =</span> <span class="fu">sum</span>(n_est_pov), </span>
+<span id="cb91-7"><a href="geoprocessing.html#cb91-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">pct_pov =</span> <span class="fu">round</span>(<span class="fu">sum</span>(n_est_pov) <span class="sc">/</span> <span class="fu">sum</span>(n_est) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span></code></pre></div>
+<p>Let’s make a quick plot:</p>
+<div class="sourceCode" id="cb92"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb92-1"><a href="geoprocessing.html#cb92-1" aria-hidden="true" tabindex="-1"></a>nhood_pov <span class="sc">%&gt;%</span></span>
+<span id="cb92-2"><a href="geoprocessing.html#cb92-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb92-3"><a href="geoprocessing.html#cb92-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> pct_pov), <span class="at">size =</span> .<span class="dv">25</span>) <span class="sc">+</span></span>
+<span id="cb92-4"><a href="geoprocessing.html#cb92-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>() <span class="sc">+</span> </span>
+<span id="cb92-5"><a href="geoprocessing.html#cb92-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme_void</span>()</span></code></pre></div>
+<p><img src="gis-R_files/figure-html/nhood_pov_plot-1.png" width="672" /></p>
+<div class="sourceCode" id="cb93"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb93-1"><a href="geoprocessing.html#cb93-1" aria-hidden="true" tabindex="-1"></a>nhood_pov <span class="sc">%&gt;%</span></span>
+<span id="cb93-2"><a href="geoprocessing.html#cb93-2" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(gen_alias, pct_pov), <span class="at">y=</span>pct_pov)) <span class="sc">+</span></span>
+<span id="cb93-3"><a href="geoprocessing.html#cb93-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_bar</span>(<span class="at">stat =</span> <span class="st">&quot;identity&quot;</span>) <span class="sc">+</span></span>
+<span id="cb93-4"><a href="geoprocessing.html#cb93-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">angle =</span> <span class="dv">90</span>, <span class="at">hjust =</span> <span class="dv">1</span>, <span class="at">vjust =</span> <span class="fl">0.5</span>)) <span class="sc">+</span></span>
+<span id="cb93-5"><a href="geoprocessing.html#cb93-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">xlab</span>(<span class="st">&quot;neighborhood&quot;</span>) <span class="sc">+</span> <span class="fu">ylab</span>(<span class="st">&quot;% living under</span><span class="sc">\n</span><span class="st">federal poverty level&quot;</span>)</span></code></pre></div>
+<p><img src="gis-R_files/figure-html/nhood_pov_bar-1.png" width="672" /></p>
+<p><a href="https://www.washington.edu/news/2019/05/10/uw-students-face-food-housing-insecurity-survey-shows/">Starving students?</a></p>
+<p>We can also export this for mapping in QGIS:</p>
+<div class="sourceCode" id="cb94"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb94-1"><a href="geoprocessing.html#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> nhood_pov, </span>
+<span id="cb94-2"><a href="geoprocessing.html#cb94-2" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> mygpkg, </span>
+<span id="cb94-3"><a href="geoprocessing.html#cb94-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;nhood_pov&quot;</span>, </span>
+<span id="cb94-4"><a href="geoprocessing.html#cb94-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">quiet =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb94-5"><a href="geoprocessing.html#cb94-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">update =</span> <span class="cn">TRUE</span>, </span>
+<span id="cb94-6"><a href="geoprocessing.html#cb94-6" aria-hidden="true" tabindex="-1"></a>         <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Warning: &#39;update&#39; is deprecated.
+## Use &#39;append&#39; instead.
+## See help(&quot;Deprecated&quot;)</code></pre>
+<p>Here shown with quintiles:</p>
+<p><img src="images/2020-02-12_10_41_58-_esda_20200212a%20-%20QGIS.png" /></p>
+</div>
+<div id="union" class="section level3" number="6.3.2">
+<h3><span class="header-section-number">6.3.2</span> Union</h3>
+<p><code>st_union()</code> will make a single geometry from multiple geometries. We can use this to “dissolve” the freeway buffers we created before.</p>
+<p>Let’s pipe together the <code>st_union()</code> and <code>st_write()</code> to dissolve the buffers and write to the GPKG in one step.</p>
+<div class="sourceCode" id="cb96"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb96-1"><a href="geoprocessing.html#cb96-1" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> </span>
+<span id="cb96-2"><a href="geoprocessing.html#cb96-2" aria-hidden="true" tabindex="-1"></a>             <span class="fu">st_union</span>(kcfwy_buf_500ft), </span>
+<span id="cb96-3"><a href="geoprocessing.html#cb96-3" aria-hidden="true" tabindex="-1"></a>         <span class="at">dsn =</span> mygpkg, </span>
+<span id="cb96-4"><a href="geoprocessing.html#cb96-4" aria-hidden="true" tabindex="-1"></a>         <span class="at">layer =</span> <span class="st">&quot;kcfwy_buf_500ft_union&quot;</span>, </span>
+<span id="cb96-5"><a href="geoprocessing.html#cb96-5" aria-hidden="true" tabindex="-1"></a>         <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">update =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Warning: &#39;update&#39; is deprecated.
+## Use &#39;append&#39; instead.
+## See help(&quot;Deprecated&quot;)</code></pre>
+<p>Verify in QGIS:</p>
+<p><img src="images/2020-02-12_10_59_26-_esda_20200212a%20-%20QGIS.png" /></p>
+<p>We can also dissolve based on a variable. In this example we are grouping by the <code>neighdist</code> variable, which represents the larger neighborhood districts, and summing the count of persons and the count of persons below the poverty level as well as calculating the percent below poverty. <code>sf</code> is doing a geometric <code>st_union()</code> behind the scenes.</p>
+<div class="sourceCode" id="cb98"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb98-1"><a href="geoprocessing.html#cb98-1" aria-hidden="true" tabindex="-1"></a><span class="co"># summarize == union</span></span>
+<span id="cb98-2"><a href="geoprocessing.html#cb98-2" aria-hidden="true" tabindex="-1"></a>districts <span class="ot">&lt;-</span> nhood_pov <span class="sc">%&gt;%</span></span>
+<span id="cb98-3"><a href="geoprocessing.html#cb98-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">group_by</span>(neighdist) <span class="sc">%&gt;%</span></span>
+<span id="cb98-4"><a href="geoprocessing.html#cb98-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb98-5"><a href="geoprocessing.html#cb98-5" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="fu">sum</span>(n), </span>
+<span id="cb98-6"><a href="geoprocessing.html#cb98-6" aria-hidden="true" tabindex="-1"></a>        <span class="at">n_pov =</span> <span class="fu">sum</span>(n_pov),</span>
+<span id="cb98-7"><a href="geoprocessing.html#cb98-7" aria-hidden="true" tabindex="-1"></a>        <span class="at">pct_pov =</span> <span class="fu">round</span>(<span class="fu">sum</span>(n_pov) <span class="sc">/</span> <span class="fu">sum</span>(n) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>))</span>
+<span id="cb98-8"><a href="geoprocessing.html#cb98-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-9"><a href="geoprocessing.html#cb98-9" aria-hidden="true" tabindex="-1"></a><span class="co"># save</span></span>
+<span id="cb98-10"><a href="geoprocessing.html#cb98-10" aria-hidden="true" tabindex="-1"></a><span class="fu">st_write</span>(<span class="at">obj =</span> districts, <span class="at">dsn =</span> mygpkg, <span class="at">layer =</span> <span class="st">&quot;districts&quot;</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>, <span class="at">update =</span> <span class="cn">TRUE</span>, <span class="at">delete_layer =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Warning: &#39;update&#39; is deprecated.
+## Use &#39;append&#39; instead.
+## See help(&quot;Deprecated&quot;)</code></pre>
+<p>Here the dissolved layer is shown in QGIS using poverty percent quintiles.</p>
+<p><img src="images/2020-02-12_11_53_14-_esda_20200212a%20-%20QGIS.png" /></p>
+
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="crs.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="leaflet.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"whatsapp": false,
+"all": ["facebook", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": "https://github.com/rstudio/bookdown-demo/edit/master/050-overlay.Rmd",
+"text": "Edit"
+},
+"history": {
+"link": null,
+"text": null
+},
+"view": {
+"link": null,
+"text": null
+},
+"download": ["gis-R.pdf", "gis-R.epub"],
+"search": {
+"engine": "fuse",
+"options": null
+},
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    var src = "true";
+    if (src === "" || src === "true") src = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML";
+    if (location.protocol !== "file:")
+      if (/^https?:/.test(src))
+        src = src.replace(/^https?:/, '');
+    script.src = src;
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+</body>
+
+</html>

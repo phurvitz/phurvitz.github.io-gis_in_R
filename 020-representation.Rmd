@@ -1,5 +1,17 @@
 # Representation of spatial features {#representation}
 
+```{r setup020, warning=FALSE, message=FALSE, include=FALSE}
+library(sf)
+library(dplyr)
+
+# path to this file name
+if (!interactive()) {
+    fnamepath <- current_input(dir = TRUE)
+} else {
+    fnamepath <- ""
+}
+```
+
 Vector (point, line, and polygon) features as used in the `sf` package are compliant with the [Open Geospatial Consortium](https://www.opengeospatial.org/standards/sfa) standard.
 
 To start, let's load the `sf` and `dplyr` packages .
@@ -108,5 +120,4 @@ text(x = st_coordinates(pts), labels = pts$name)
 
 ## Conclusion
 It is more likely that you will be obtaining GIS data sources, rather than constructing your own using the types of functions shown above. However, understanding how these features are represented, created, and stored should give you a better understanding of how GIS works at a fundamental level.
-
 

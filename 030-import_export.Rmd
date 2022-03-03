@@ -1,7 +1,14 @@
 # Importing and exporting spatial data sets {#import-export}
 
-```{r, echo=FALSE}
+```{r setup030, echo=FALSE}
 library(sf)
+
+# path to this file name
+if (!interactive()) {
+    fnamepath <- current_input(dir = TRUE)
+} else {
+    fnamepath <- ""
+}
 ```
 
 ## Importing spatial data sets
@@ -20,29 +27,31 @@ For those familiar with Esri software, the GPKG is similar in concept to the Esr
 
 Let's read the ZIP code data, which are in an Esri file geodatabase. In order to read some formats it is necessary to have drivers installed--therefore not all computers can necessarily open all file types. __[Was anyone not able to open the GDB?]__
 
+In order to run this code chunk it will be necessary to edit the path where you downloaded the data (`mydatadir`).
+
 ```{r readzip}
 # path to the data
-mydatadir <- file.path("C:", "users", Sys.getenv("USERNAME"), "Desktop", "r_gis", "data")
+mydatadir <- "H:/gis_in_r/data"
 zippolyfname <- file.path(mydatadir, "zip_poly.gdb")
 # avoid reading over and over
-if(!exists("zipcodes")){
-    zipcodes <- st_read(dsn = zippolyfname, layer = "zip_poly", as_tibble = TRUE, geometry_column = "Shape")
+if(!exists("myzipcodes")){
+    myzipcodes <- st_read(dsn = zippolyfname, layer = "zip_poly", as_tibble = TRUE, geometry_column = "Shape")
 }
 ```
 
 ```{r zip1}
 # change the data frame's column names to lowercase
-colnames(zipcodes) <- tolower(colnames(zipcodes))
+colnames(myzipcodes) <- tolower(colnames(myzipcodes))
 # after renaming columns it is necessary to re-establish which column contains the geometry
-st_geometry(zipcodes) <- "shape"
+st_geometry(myzipcodes) <- "shape"
 ```
 
-By default, `st_read()` prints some metadata during the read opearation (which can be silenced using `quiet = TRUE`). This shows that the data set contains `r nrow(zipcodes)` records and `r ncol(zipcodes)` columns (including the geometry columns). It is has multipolygon geometry, meaning that a single record can contain multiple rings (e.g., if a single ZIP code area straddled a stream), and its spatial reference is WGS84 (coordinates as degrees of latitude and longitude).
+By default, `st_read()` prints some metadata during the read opearation (which can be silenced using `quiet = TRUE`). This shows that the data set contains `r nrow(myzipcodes)` records and `r ncol(myzipcodes)` columns (including the geometry columns). It is has multipolygon geometry, meaning that a single record can contain multiple rings (e.g., if a single ZIP code area straddled a stream), and its spatial reference is WGS84 (coordinates as degrees of latitude and longitude).
 
 To make a manageable data set, let's extract only those ZIP codes areas for Washington State.
 
 ```{r zip2}
-zip_wa <- zipcodes %>% filter(state == "WA")
+zip_wa <- myzipcodes %>% dplyr::filter(state == "WA")
 ```
 
 The first several records:
@@ -108,15 +117,28 @@ Next, we will write the first data sets we created (point, linestring, and polyg
 
 ```{r drop1, echo=FALSE, message=FALSE}
 if(file.exists(file.path(mydatadir, "r_gis.gpkg"))){
-    O <- file.remove(file.path(mydatadir, "r_gis.gpkg"))
+    #O <- file.remove(file.path(mydatadir, "r_gis.gpkg"))
 }
 ```
 
 ```{r multiwrite}
-st_write(obj = pts, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "pts")
-st_write(obj = lnstr, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "lnstr")
-st_write(obj = plygn, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "plygn")
-st_write(obj = zip_wa, dsn = file.path(mydatadir, "r_gis.gpkg"), layer = "zip_wa")
+st_write(obj = pts,
+         dsn = file.path(mydatadir, "r_gis.gpkg"),
+         layer = "pts", 
+         append = TRUE, delete_layer = TRUE)
+st_write(obj = lnstr,
+         dsn = file.path(mydatadir, "r_gis.gpkg"),
+         layer = "lnstr",
+         append = TRUE, delete_layer = TRUE)
+st_write(obj = plygn,
+         dsn = file.path(mydatadir, "r_gis.gpkg"),
+         layer = "plygn",
+         append = TRUE, delete_layer = TRUE)
+st_write(obj = zip_wa,
+         dsn = file.path(mydatadir, "r_gis.gpkg"),
+         layer = "zip_wa",
+         append = TRUE, delete_layer = TRUE)
+         
 ```
 
 Finally, add these data sets to your QGIS Map.
@@ -124,16 +146,4 @@ Finally, add these data sets to your QGIS Map.
 ![](images/2020-02-11_09_38_16-esda_20200212a - QGIS.png)
 
 ![](images/2020-02-11_12_43_31-_esda_20200212a - QGIS.png)
-
-
-
-
-
-
-
-
-
-
-
-
 
