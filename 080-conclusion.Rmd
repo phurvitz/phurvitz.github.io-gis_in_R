@@ -1,0 +1,5 @@
+# Conclusion
+
+R provides a robust and direct framework for GIS applications, from data creation, management, and analysis to visualization, and file storage.
+
+As geospatial applications and analysis become more central to other fields of inquiry, expect a greater proliferation of packages and methods in this quickly evolving area.

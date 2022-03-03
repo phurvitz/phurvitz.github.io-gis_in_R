@@ -22,10 +22,12 @@ We will now build up a map using `leaflet()` for a bit more control.
 nhood_pov_4326 <- nhood_pov %>% st_transform(4326)
 
 # make a label with the count of persons, persons below poverty, and % poverty
-nhood_pov_4326$mylab <- sprintf("n_pov=%s<br>n=%s<br>%s<br>", 
-                                round(nhood_pov_4326$n_pov, 0), 
-                                round(nhood_pov_4326$n, 0), 
-                                paste("pov=", nhood_pov_4326$pct_pov, "%", sep=""))
+nhood_pov_4326$mylab <- sprintf(
+    "n_pov=%s<br>n=%s<br>%s<br>",
+    round(nhood_pov_4326$n_pov, 0),
+    round(nhood_pov_4326$n, 0),
+    paste("pov=", nhood_pov_4326$pct_pov, "%", sep = "")
+)
 
 l <- leaflet(data = nhood_pov_4326) %>%
     addPolygons(popup = ~mylab, weight = 2) %>%
@@ -42,17 +44,21 @@ nhood_pov_4326 <- nhood_pov %>% st_transform(4326)
 mypalette <- colorQuantile(palette = "viridis", domain = nhood_pov_4326$pct_pov, n = 4)
 
 # make a label with the count of persons, persons below poverty, and % poverty
-nhood_pov_4326$mylab <- sprintf("%s<br>%s<br>", 
-                                nhood_pov_4326$gen_alias, 
-                                paste("pov=", nhood_pov_4326$pct_pov, "%", sep=""))
+nhood_pov_4326$mylab <- sprintf(
+    "%s<br>%s<br>",
+    nhood_pov_4326$gen_alias,
+    paste("pov=", nhood_pov_4326$pct_pov, "%", sep = "")
+)
 
 l <- leaflet(data = nhood_pov_4326) %>%
-    addPolygons(popup = ~mylab, 
-                weight = 2, 
-                fillColor = ~mypalette(pct_pov),
-                opacity = 0.7) %>%
+    addPolygons(
+        popup = ~mylab,
+        weight = 2,
+        fillColor = ~ mypalette(pct_pov),
+        opacity = 0.7
+    ) %>%
     addTiles() %>%
-    addLegend(pal=mypalette, values=~pct_pov, opacity=0.7, title = "% below poverty", position = "bottomleft" )
+    addLegend(pal = mypalette, values = ~pct_pov, opacity = 0.7, title = "% below poverty", position = "bottomleft")
 
 l
 ```
@@ -69,25 +75,34 @@ hospitals <- st_read(file.path(mydatadir, "medical_facilities", "medical_facilit
 mypalette <- colorQuantile(palette = "viridis", domain = nhood_pov_4326$pct_pov, n = 4)
 
 # make a label with the count of persons, persons below poverty, and % poverty
-nhood_pov_4326$mylab <- sprintf("%s<br>%s<br>", 
-                                nhood_pov_4326$gen_alias, 
-                                paste("pov=", nhood_pov_4326$pct_pov, "%", sep=""))
+nhood_pov_4326$mylab <- sprintf(
+    "<u>%s</u><br>%s<br>",
+    nhood_pov_4326$gen_alias,
+    paste("pov=", nhood_pov_4326$pct_pov, "%", sep = "")
+)
 
 l <- leaflet(data = nhood_pov_4326) %>%
-    addPolygons(popup = ~mylab, 
-                weight = 2, 
-                fillColor = ~mypalette(pct_pov),
-                opacity = 0.7) %>%
+    addPolygons(
+        popup = ~mylab,
+        weight = 2,
+        fillColor = ~ mypalette(pct_pov),
+        opacity = 0.7
+    ) %>%
     addTiles() %>%
-    addLegend(pal=mypalette, values=~pct_pov, opacity=0.7, title = "% below poverty", position = "bottomleft" )
+    addLegend(pal = mypalette, values = ~pct_pov, opacity = 0.7, title = "% below poverty", position = "bottomleft")
 
-l <- addCircleMarkers(map = l, 
-                     data = hospitals,
-                     radius = 5, 
-                     weight = 1,
-                     opacity = 0.9,
-                     fillOpacity = 0.5,
-                     label = ~ABB_NAME)
+l <- addCircleMarkers(
+    map = l,
+    data = hospitals,
+    radius = 5,
+    weight = 1,
+    opacity = 0.9,
+    fillOpacity = 0.5,
+    label = ~ABB_NAME
+)
 
 l
 ```
+
+## Conclusion
+R makes it easy to create web-ready maps based on the `leaflet` and `mapview` packages. See the documentation and other tutorials for additional information.

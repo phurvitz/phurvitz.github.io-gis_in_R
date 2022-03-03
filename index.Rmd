@@ -70,7 +70,8 @@ Each of the topics shown below will be covered during the course.
 1. Representation of spatial features
 1. Data import/export
 1. Projections and coordinate systems
-1. Overlay analysis
+1. Geoprocessing
+    1. Buffering
     1. Point-in-polygon
     1. Polygon-on-polygon
 <!--1. Raster functionality-->
@@ -78,4 +79,4 @@ Each of the topics shown below will be covered during the course.
 
 <hr>
 
-GitHub: [gis_in_R](https://github.com/phurvitz/phurvitz.github.io-gis_in_R)
+GitHub souce: [gis_in_R](https://github.com/phurvitz/phurvitz.github.io-gis_in_R)

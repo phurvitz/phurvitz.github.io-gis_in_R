@@ -34,7 +34,7 @@ In order to run this code chunk it will be necessary to edit the path where you 
 mydatadir <- "H:/gis_in_r/data"
 zippolyfname <- file.path(mydatadir, "zip_poly.gdb")
 # avoid reading over and over
-if(!exists("myzipcodes")){
+if (!exists("myzipcodes")) {
     myzipcodes <- st_read(dsn = zippolyfname, layer = "zip_poly", as_tibble = TRUE, geometry_column = "Shape")
 }
 ```
@@ -63,7 +63,7 @@ head(zip_wa)
 We can now plot the ZIP code polygons. The default `plot()` function will create a separate graph for each variable; to only show the geometries, specify plotting only the column representing geometry. 
 
 ```{r zipwa2}
-plot(x = zip_wa$shape, axes = TRUE)
+plot(x = zip_wa$shape, axes = TRUE, las = 1)
 ```
 
 Let's now read the hospital shape file data.
@@ -82,13 +82,13 @@ h2o <- st_read(file.path(mydatadir, "wtrbdy/wtrbdy.shp"))
 
 ```{r mixedplot}
 # type = "n" not to plot, but sets xlim and ylim
-plot(hospitals$geometry, type = "n", axes = TRUE)
-# water
-plot(h2o$geometry, col = "cyan", border = 0, add = TRUE)
-# hospital points
-plot(hospitals$geometry, add = TRUE)
+plot(hospitals$geometry, type = "n", axes = TRUE, las = 1)
 # ZIP code areas
 plot(zip_wa$shape, add = TRUE, col = 0, border = 1)
+# water
+plot(h2o$geometry %>% st_transform(4326), col = "cyan", border = 1, add = TRUE)
+# hospital points
+plot(hospitals$geometry, pch = 21, col = 2, fill = 1, border = 2, add = TRUE)
 box()
 ```
 
@@ -100,7 +100,7 @@ Similar to `st_read()`, `st_write()` can be used to export spatial data into a v
 First, we will export the Washington State ZIP code areas to a shape file. Similar to `st_read()`, `st_write()` prints an informative message.
 
 ```{r drop0, echo=FALSE, message=FALSE}
-if(file.exists(file.path(mydatadir, "zip_wa.shp"))){
+if (file.exists(file.path(mydatadir, "zip_wa.shp"))) {
     O <- file.remove(file.path(mydatadir, "zip_wa.shp"))
 }
 ```
@@ -116,23 +116,41 @@ Switch to QGIS and load the exported Washington State ZIP codes as a layer. Note
 Next, we will write the first data sets we created (point, linestring, and polygon) and the WA ZIP code areas into a GPKG.
 
 ```{r multiwrite}
-st_write(obj = pts,
-         dsn = file.path(mydatadir, "r_gis.gpkg"),
-         layer = "pts", 
-         append = TRUE, delete_layer = TRUE)
-st_write(obj = lnstr,
-         dsn = file.path(mydatadir, "r_gis.gpkg"),
-         layer = "lnstr",
-         append = TRUE, delete_layer = TRUE)
-st_write(obj = plygn,
-         dsn = file.path(mydatadir, "r_gis.gpkg"),
-         layer = "plygn",
-         append = TRUE, delete_layer = TRUE)
-st_write(obj = zip_wa,
-         dsn = file.path(mydatadir, "r_gis.gpkg"),
-         layer = "zip_wa",
-         append = TRUE, delete_layer = TRUE)
-         
+# 3 points
+st_write(
+    obj = pts,
+    dsn = file.path(mydatadir, "r_gis.gpkg"),
+    layer = "pts",
+    append = TRUE,
+    delete_layer = TRUE
+)
+
+# line connecting two points
+st_write(
+    obj = lnstr,
+    dsn = file.path(mydatadir, "r_gis.gpkg"),
+    layer = "lnstr",
+    append = TRUE,
+    delete_layer = TRUE
+)
+
+# polygon connecting 3 points
+st_write(
+    obj = plygn,
+    dsn = file.path(mydatadir, "r_gis.gpkg"),
+    layer = "plygn",
+    append = TRUE,
+    delete_layer = TRUE
+)
+
+# WA zip codes
+st_write(
+    obj = zip_wa,
+    dsn = file.path(mydatadir, "r_gis.gpkg"),
+    layer = "zip_wa",
+    append = TRUE,
+    delete_layer = TRUE
+)
 ```
 
 Finally, add these data sets to your QGIS Map.
@@ -141,3 +159,5 @@ Finally, add these data sets to your QGIS Map.
 
 ![](images/2020-02-11_12_43_31-_esda_20200212a - QGIS.png)
 
+## Conclusion
+Using `st_read()` and `st_write()` allow the reading and writing of a number of different GIS file formats. A recommended best practice is to keep all data sets for a particular project in a single GPKG file, allowing GIS analysis as well as generic database management and analysis.

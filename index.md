@@ -164,11 +164,12 @@ Each of the topics shown below will be covered during the course.
 1. Representation of spatial features
 1. Data import/export
 1. Projections and coordinate systems
-1. Overlay analysis
+1. GEoprocessing
+    1. BUffering
     1. Point-in-polygon
     1. Polygon-on-polygon
 <!--1. Raster functionality-->
-1. Simple interactive maps with `Leaflet` and `mapview`
+1. Simple interactive maps with `leaflet` and `mapview`
 
 
 ## Source code

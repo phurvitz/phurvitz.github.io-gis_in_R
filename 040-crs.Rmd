@@ -85,8 +85,6 @@ kable(utm10) %>% kable_styling(bootstrap_options = "striped", full_width = F, po
 kable(epsg %>%filter(code == 2927)) %>% kable_styling(bootstrap_options = "striped", full_width = F, position = "left")
 ```
 
-
-
 ## Coordinate transformation
 If you have a data set stored in one CRS and you want to transform its coordinates to match another CRS, use `st_transform()` for `sf` data frames or the `projctRaster()` function for raster data sets.
 
@@ -104,3 +102,8 @@ Or if you want to overwrite the data of an existing data frame with a new CRS:
 ```
 
 which should be done with care because it alters the values of an existing data set.
+
+## Conclusion
+For any GIS analysis, it is imperative that all input data sets be stored with the same CRS, otherwise the outputs are almost certain to be non-existent or erroneous.
+
+A best practices work flow would be to take a set of layers that are in a variety of CRS and to transform them all to the same CRS and write them all to a single GPKG for further analysis.

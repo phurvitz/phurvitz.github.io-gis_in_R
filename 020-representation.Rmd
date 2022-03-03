@@ -63,14 +63,14 @@ print(pts)
 View the points in coordinate space:
 
 ```{r pts2}
-plot(pts$geometry, axes = TRUE)
+plot(pts$geometry, axes = TRUE, las = 1)
 ```
 
 ## Linestrings
 Linestrings are linear features created a single set of ordered pairs of points. We can use the set of points we created to generate a simple linestring `sf` data frame with two vertices:
 
 ```{r ls}
-# create a linestring sf data frame 
+# create a linestring sf data frame
 lnstr <- st_sfc(st_linestring(st_coordinates(pts)), crs = 4326)
 ```
 
@@ -83,7 +83,7 @@ lnstr <- as_tibble(lnstr) %>% mutate(od = "Space Needle, Savery Hall")
 And plot the points and linestring with base R graphics:
 
 ```{r pts-ls}
-plot(pts$geometry, axes = TRUE)
+plot(pts$geometry, axes = TRUE, las = 1)
 text(x = st_coordinates(pts), labels = pts$name)
 plot(lnstr$geometry, col = 2, add = TRUE)
 ```
@@ -112,7 +112,7 @@ And construct a polygon using the coordinates of the set of three points and clo
 Plotted with the other features:
 
 ```{r plotgeoms}
-plot(plygn, col = "cyan", axes = TRUE)
+plot(plygn, col = "cyan", axes = TRUE, las = 1)
 plot(lnstr$geometry, col = 2, add = TRUE, lwd = 3)
 plot(pts$geometry, add = TRUE, cex = 2)
 text(x = st_coordinates(pts), labels = pts$name)
@@ -120,4 +120,3 @@ text(x = st_coordinates(pts), labels = pts$name)
 
 ## Conclusion
 It is more likely that you will be obtaining GIS data sources, rather than constructing your own using the types of functions shown above. However, understanding how these features are represented, created, and stored should give you a better understanding of how GIS works at a fundamental level.
-
